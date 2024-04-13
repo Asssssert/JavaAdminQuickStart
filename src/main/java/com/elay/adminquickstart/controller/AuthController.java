@@ -48,7 +48,11 @@ public interface AuthController {
     @PostMapping("/register")
     Result<Void> register(@RequestBody @Valid RegisterReq params);
 
-    // 返回验证码图片流
+    /**
+     * 获取验证码
+     *
+     * @param response
+     */
     @GetMapping("/captcha")
     void captcha(HttpServletResponse response);
 
