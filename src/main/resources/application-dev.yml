@@ -1,0 +1,13 @@
+server:
+  port: 8888
+spring:
+#mysql
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/adminquickstart?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+    hikari:
+      maximum-pool-size: 10
+  mvc:
+    validation: true

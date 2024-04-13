@@ -1,0 +1,44 @@
+package com.elay.adminquickstart.emus;
+
+import lombok.Getter;
+
+/**
+ * @author LI
+ * @since 2024/4/13
+ */
+@Getter
+public enum ResponseStatus {
+    SUCCESS(200, "成功"),
+    FAIL(500, "失败"),
+    LOGIN_SUCCESS(200, "登录成功"),
+    LOGIN_FAIL(401, "登录失败"),
+    LOGOUT_SUCCESS(200, "退出成功"),
+    CAPTCHA_EXPIRED(401, "验证码过期"),
+    LOGOUT_FAIL(401, "退出失败"),
+    CAPTCHA_ERROR(401, "验证码错误"),
+    CAPTCHA_NULL(401, "验证码为空"),
+    NOT_FOUND(404, "未找到"),
+    UNAUTHORIZED(401, "未授权"),
+    UNSUPPORTED_MEDIA_TYPE(415, "不支持的媒体类型"),
+    REQUEST_TIMEOUT(408, "请求超时"),
+    CONFLICT(409, "冲突"),
+    FORBIDDEN(403, "禁止访问"),
+    NOT_ACCEPTABLE(406, "不可接受"),
+    //参数校验失败
+    PARAMETER_ERROR(400, "参数校验失败"),
+    ERROR(500, "错误"),
+    REGISTER_SUCCESS(200, "注册成功"),
+    REGISTER_FAIL(401, "注册失败"),
+    USERNAME_PASSWORD_ERROR(401, "用户名或邮箱已存在");
+
+    ;
+
+
+    private int code;
+    private String msg;
+
+    ResponseStatus(int code, String msg) {
+        this.code = code;
+        this.msg = msg;
+    }
+}

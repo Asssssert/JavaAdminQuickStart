@@ -2,6 +2,7 @@ package com.elay.adminquickstart.service;
 
 import com.elay.adminquickstart.entity.Users;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.elay.adminquickstart.request.LoginReq;
 
 /**
  * <p>
@@ -14,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUsersService extends IService<Users> {
 
+    boolean login(LoginReq params);
 }
