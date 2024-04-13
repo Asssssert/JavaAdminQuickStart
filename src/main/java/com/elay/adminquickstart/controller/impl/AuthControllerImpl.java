@@ -1,5 +1,7 @@
 package com.elay.adminquickstart.controller.impl;
 
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.LineCaptcha;
 import com.elay.adminquickstart.controller.AuthController;
 import com.elay.adminquickstart.emus.ResponseStatus;
 import com.elay.adminquickstart.request.LoginReq;
@@ -7,11 +9,14 @@ import com.elay.adminquickstart.request.RegisterReq;
 import com.elay.adminquickstart.response.Result;
 import com.elay.adminquickstart.service.impl.UsersService;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
+import java.net.http.HttpResponse;
 
 /**
  * @author LI
@@ -42,5 +47,20 @@ public class AuthControllerImpl implements AuthController {
             return Result.ok(ResponseStatus.REGISTER_SUCCESS);
         }
         return Result.err(ResponseStatus.USERNAME_PASSWORD_ERROR);
+    }
+
+    @Override
+    public void captcha(HttpServletResponse response) {
+        //定义图形验证码的长和宽
+        LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 100);
+        //输出code
+        System.out.println(lineCaptcha.getCode());
+        //验证图形验证码的有效性，返回boolean值
+//        lineCaptcha.verify("1234");
+        try {
+            lineCaptcha.write(response.getOutputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
