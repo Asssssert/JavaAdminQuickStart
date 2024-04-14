@@ -55,7 +55,7 @@ public class UserControllerImpl implements UserController {
     public Result<Page> searchByKey(String key, Integer page, Integer size) {
         Page usersPage = usersService.searchByKey(key, page, size);
         if (usersPage == null) {
-            return Result.err(ResponseStatus.NOT_FOUND, null);
+            return Result.err(ResponseStatus.NOT_DATA, null);
         }
         List<AdminUserResp> data = new ArrayList<>();
         // 封装分页数据
