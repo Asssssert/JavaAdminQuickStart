@@ -23,8 +23,6 @@ import java.util.Map;
 @RestController
 public class GlobalExceptionHandler {
 
-
-    @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Result<Map<String, String>> handleMethodArgumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
