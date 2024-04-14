@@ -1,8 +1,9 @@
 package com.elay.adminquickstart.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.elay.adminquickstart.entity.Users;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.elay.adminquickstart.request.LoginReq;
+import com.elay.adminquickstart.request.auth.LoginReq;
 
 /**
  * <p>
@@ -16,4 +17,6 @@ import com.elay.adminquickstart.request.LoginReq;
 public interface IUsersService extends IService<Users> {
 
     boolean login(LoginReq params);
+
+    Page<Users> searchByKey(String key, Integer page, Integer size);
 }

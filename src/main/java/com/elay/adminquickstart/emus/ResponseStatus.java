@@ -29,9 +29,8 @@ public enum ResponseStatus {
     ERROR(500, "错误"),
     REGISTER_SUCCESS(200, "注册成功"),
     REGISTER_FAIL(401, "注册失败"),
-    USERNAME_PASSWORD_ERROR(401, "用户名或邮箱已存在");
-
-    ;
+    USERNAME_PASSWORD_ERROR(401, "用户名或邮箱已存在")
+    , USER_NOT_FOUND(401, "用户不存在");;
 
 
     private int code;

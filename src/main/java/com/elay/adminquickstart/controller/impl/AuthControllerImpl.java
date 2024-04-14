@@ -2,13 +2,12 @@ package com.elay.adminquickstart.controller.impl;
 
 import com.elay.adminquickstart.controller.AuthController;
 import com.elay.adminquickstart.emus.ResponseStatus;
-import com.elay.adminquickstart.request.LoginReq;
-import com.elay.adminquickstart.request.RegisterReq;
+import com.elay.adminquickstart.request.auth.LoginReq;
+import com.elay.adminquickstart.request.auth.RegisterReq;
 import com.elay.adminquickstart.response.Result;
 import com.elay.adminquickstart.service.impl.UsersService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
