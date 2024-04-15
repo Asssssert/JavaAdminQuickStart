@@ -2,6 +2,8 @@ package com.elay.adminquickstart.service;
 
 import com.elay.adminquickstart.entity.Permissions;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.elay.adminquickstart.request.permission.AddPermissionReq;
+import com.elay.adminquickstart.request.permission.UpdPermissionReq;
 
 /**
  * <p>
@@ -14,4 +16,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IPermissionsService extends IService<Permissions> {
 
+    boolean add(AddPermissionReq params);
+
+    boolean upd(UpdPermissionReq params);
 }
