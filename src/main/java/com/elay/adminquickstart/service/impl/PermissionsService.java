@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 /**
  * <p>
  * 权限表
- 服务实现类
+ * 服务实现类
  * </p>
  *
  * @author eLay
@@ -24,9 +24,7 @@ public class PermissionsService extends ServiceImpl<PermissionsMapper, Permissio
 
     @Override
     public boolean add(AddPermissionReq params) {
-        QueryWrapper<Permissions> wrapper = new QueryWrapper<>();
-        wrapper.eq("permission_name", params.getPermissionName());
-        if(this.count(wrapper)>0){
+        if (exitByUsername(params.getPermissionName())) {
             return false;
         }
         Permissions permissions = new Permissions();
@@ -37,9 +35,20 @@ public class PermissionsService extends ServiceImpl<PermissionsMapper, Permissio
     @Override
     public boolean upd(UpdPermissionReq params) {
         Permissions byId = getById(params.getPermissionId());
-        if(byId!=null){
-            BeanUtil.copyProperties(params, byId);
+        if (byId != null) {
+            if (!exitByUsername(params.getPermissionName())) {
+                return false;
+            }
             return this.updateById(byId);
+        }
+        return false;
+    }
+
+    private boolean exitByUsername(String username) {
+        QueryWrapper<Permissions> wrapper = new QueryWrapper<>();
+        wrapper.eq("permission_name", username);
+        if (this.count(wrapper) > 0) {
+            return true;
         }
         return false;
     }

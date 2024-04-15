@@ -35,8 +35,8 @@ public enum ResponseStatus {
     ROLE_NOT_EXIST(401, "身份不存在"),
     NOT_DATA(401, "没有数据"),
     PERMISSION_EXIST_ERROR(401, "权限已存在"),
-    PERMISSION_NOT_EXIST_ERROR(401, "权限不存在")
-    ;
+    PERMISSION_NOT_EXIST_ERROR(401, "权限不存在"),
+    ID_NOT_FOUND(401,"ID不存在" );
 
 
     private int code;
