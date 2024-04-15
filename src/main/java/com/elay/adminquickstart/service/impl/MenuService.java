@@ -55,9 +55,6 @@ public class MenuService extends ServiceImpl<MenuMapper, Menu> implements IMenuS
         QueryWrapper<Menu> wrapper = new QueryWrapper<>();
         wrapper.eq("menu_name", name)
                 .eq("menu_path", path);
-        if (this.count() > 0) {
-            return true;
-        }
-        return false;
+        return this.count() > 0;
     }
 }

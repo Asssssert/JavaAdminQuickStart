@@ -47,9 +47,6 @@ public class PermissionsService extends ServiceImpl<PermissionsMapper, Permissio
     private boolean exitByUsername(String username) {
         QueryWrapper<Permissions> wrapper = new QueryWrapper<>();
         wrapper.eq("permission_name", username);
-        if (this.count(wrapper) > 0) {
-            return true;
-        }
-        return false;
+        return this.count(wrapper) > 0;
     }
 }

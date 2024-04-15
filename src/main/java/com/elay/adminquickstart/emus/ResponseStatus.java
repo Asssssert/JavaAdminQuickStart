@@ -39,8 +39,8 @@ public enum ResponseStatus {
     ID_NOT_FOUND(401,"ID不存在" );
 
 
-    private int code;
-    private String msg;
+    private final int code;
+    private final String msg;
 
     ResponseStatus(int code, String msg) {
         this.code = code;

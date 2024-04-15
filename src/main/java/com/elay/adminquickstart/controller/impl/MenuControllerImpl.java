@@ -56,7 +56,7 @@ public class MenuControllerImpl implements MenuController {
     }
 
     @Override
-    public Result<Page> page(Integer page, Integer size) {
+    public Result<Page<Menu>> page(Integer page, Integer size) {
         Page<Menu> data = menuService.page(new Page<>(page, size));
         if (data != null) {
             return Result.ok(ResponseStatus.SUCCESS, data);
@@ -66,8 +66,8 @@ public class MenuControllerImpl implements MenuController {
     }
 
     @Override
-    public Result<Page> pageByParentId(Integer parentId, Integer page, Integer size) {
-        Page<Menu> data = menuService.pageByParentId(parentId, page, size);
+    public Result<Page<Menu>> pageByParentId(Integer parentId, Integer page, Integer size) {
+//        Page<Menu> data = menuService.pageByParentId(parentId, page, size);
         return null;
     }
 }

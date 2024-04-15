@@ -33,9 +33,9 @@ public interface MenuController {
     Result<Menu> get(@PathVariable("roleId") @NotNull(message = "菜单ID不能为空") Integer userId);
 
     @GetMapping("/page")
-    Result<Page> page(@RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size);
+    Result<Page<Menu>> page(@RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size);
 
     @GetMapping("/page")
-    Result<Page> pageByParentId(@RequestParam(value = "page", defaultValue = "0") Integer parentId, @RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size);
+    Result<Page<Menu>> pageByParentId(@RequestParam(value = "page", defaultValue = "0") Integer parentId, @RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size);
 
 }
