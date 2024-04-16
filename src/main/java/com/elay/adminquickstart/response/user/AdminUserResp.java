@@ -54,4 +54,9 @@ public class AdminUserResp {
      * 性别（0男，1女，2其他
      */
     private Byte gender;
+
+    /**
+     * 状态（0正常，1禁用）
+     */
+    private Byte state;
 }

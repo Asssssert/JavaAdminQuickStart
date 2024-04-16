@@ -13,6 +13,8 @@ import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @author LI
  * @since 2024/4/15
@@ -64,5 +66,14 @@ public class RoleControllerImpl implements RoleController {
             return Result.ok(ResponseStatus.SUCCESS, pageInfo);
         }
         return Result.err(ResponseStatus.NOT_DATA, null);
+    }
+
+    @Override
+    public Result<List<Roles>> list() {
+        List<Roles> rolesList = rolesService.list();
+        if(rolesList == null){
+            return Result.err(ResponseStatus.NOT_DATA, null);
+        }
+        return Result.ok(ResponseStatus.SUCCESS, rolesList);
     }
 }

@@ -13,6 +13,7 @@
         <result column="created_at" property="createdAt" />
         <result column="updated_at" property="updatedAt" />
         <result column="gender" property="gender" />
+        <result column="state" property="state" />
     </resultMap>
 
 </mapper>

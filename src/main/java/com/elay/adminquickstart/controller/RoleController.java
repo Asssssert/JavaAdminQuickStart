@@ -13,6 +13,8 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 /**
  * @author LI
@@ -37,5 +39,8 @@ public interface RoleController {
 
     @GetMapping("/page")
     Result<Page> page(@RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size);
+
+    @GetMapping("/list")
+    Result<List<Roles>> list();
 
 }

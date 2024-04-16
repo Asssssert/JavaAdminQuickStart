@@ -58,6 +58,7 @@ public class UserControllerImpl implements UserController {
             return Result.err(ResponseStatus.NOT_DATA, null);
         }
         List<AdminUserResp> data = new ArrayList<>();
+        //TODO:lastLoginTime,lastLoginIp
         // 封装分页数据
         usersPage.getRecords().forEach(item -> {
             AdminUserResp user = new AdminUserResp();

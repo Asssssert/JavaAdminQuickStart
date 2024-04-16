@@ -25,7 +25,7 @@ public class RolesService extends ServiceImpl<RolesMapper, Roles> implements IRo
     @Override
     public boolean add(AddRoleReq params) {
         QueryWrapper<Roles> wrapper = new QueryWrapper<>();
-        wrapper.eq("username", params.getRoleName());
+        wrapper.eq("role_name", params.getRoleName());
         if (this.count(wrapper) > 0) {
             return false;
         }
