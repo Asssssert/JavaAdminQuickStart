@@ -2,6 +2,7 @@ package com.elay.adminquickstart.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.elay.adminquickstart.entity.Permissions;
 import com.elay.adminquickstart.mapper.PermissionsMapper;
 import com.elay.adminquickstart.request.permission.AddPermissionReq;
@@ -48,5 +49,12 @@ public class PermissionsService extends ServiceImpl<PermissionsMapper, Permissio
         QueryWrapper<Permissions> wrapper = new QueryWrapper<>();
         wrapper.eq("permission_name", username);
         return this.count(wrapper) > 0;
+    }
+
+    @Override
+    public Page<Permissions> pageByParendId(Integer parentId, Page objectPage) {
+        QueryWrapper<Permissions> wrapper = new QueryWrapper<>();
+        wrapper.eq("permission_parent_id", parentId);
+        return this.page(objectPage, wrapper);
     }
 }

@@ -6,10 +6,11 @@
     <resultMap id="BaseResultMap" type="com.elay.adminquickstart.entity.Permissions">
         <id column="permission_id" property="permissionId" />
         <result column="permission_name" property="permissionName" />
-        <result column="permission_type" property="permissionType" />
+        <result column="permission_parent_id" property="permissionParentId" />
         <result column="permission_code" property="permissionCode" />
         <result column="permission_desc" property="permissionDesc" />
         <result column="permission_method" property="permissionMethod" />
+        <result column="permission_api" property="permissionApi" />
     </resultMap>
 
 </mapper>

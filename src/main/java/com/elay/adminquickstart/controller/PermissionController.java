@@ -8,6 +8,7 @@ import com.elay.adminquickstart.request.permission.AddPermissionReq;
 import com.elay.adminquickstart.response.Result;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,13 +28,16 @@ public interface PermissionController {
     @PostMapping("/upd")
     Result<Void> upd(@RequestBody @Valid UpdPermissionReq params);
 
-    @DeleteMapping("/{roleId}")
-    Result<Void> del(@PathVariable("roleId") @NotNull(message = "权限ID不能为空") Integer userId);
+    @DeleteMapping("/{permissionId}")
+    Result<Void> del(@PathVariable("permissionId") @NotNull(message = "权限ID不能为空") Integer userId);
 
-    @GetMapping("/{roleId}")
-    Result<Permissions> get(@PathVariable("roleId") @NotNull(message = "权限ID不能为空") Integer userId);
+    @GetMapping("/{permissionId}")
+    Result<Permissions> get(@PathVariable("permissionId") @NotNull(message = "权限ID不能为空") Integer userId);
 
     @GetMapping("/page")
     Result<Page> page(@RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size);
+
+    @GetMapping("/page/{parentId}")
+    Result<Page> pageByParentId(@PathVariable("parentId") @DefaultValue("0") Integer parentId, @RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size);
 
 }

@@ -36,7 +36,7 @@ public class Permissions implements Serializable {
     /**
      * 0是菜单，1是接口
      */
-    private Byte permissionType;
+    private Integer permissionParentId;
 
     /**
      * 权限代码
@@ -45,10 +45,15 @@ public class Permissions implements Serializable {
 
     private String permissionDesc;
 
+
     /**
      * 请求方式
      */
     private String permissionMethod;
 
+    /**
+     * 请求地址
+     */
+    private String permissionApi;
 
 }
