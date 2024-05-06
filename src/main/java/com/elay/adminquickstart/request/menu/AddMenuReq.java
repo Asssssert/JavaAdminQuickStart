@@ -1,6 +1,7 @@
 package com.elay.adminquickstart.request.menu;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
@@ -25,7 +26,7 @@ public class AddMenuReq {
     /**
      * 父菜单ID
      */
-    @NotBlank(message = "父菜单ID不能为空")
+    @NotNull(message = "父菜单ID不能为空")
     private Integer parentMenuId;
 
     /**

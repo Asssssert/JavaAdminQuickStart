@@ -47,7 +47,11 @@ public class MenuService extends ServiceImpl<MenuMapper, Menu> implements IMenuS
 
     @Override
     public Page<Menu> pageByParentId(Integer parentId, Integer page, Integer size) {
-        return null;
+        QueryWrapper<Menu> wrapper = new QueryWrapper<>();
+        wrapper.eq("parent_menu_id",parentId);
+        Page<Menu> menuPage = new Page<>(page, size);
+        Page<Menu> selectPage = baseMapper.selectPage(menuPage, wrapper);
+        return selectPage;
     }
 
 
@@ -55,6 +59,6 @@ public class MenuService extends ServiceImpl<MenuMapper, Menu> implements IMenuS
         QueryWrapper<Menu> wrapper = new QueryWrapper<>();
         wrapper.eq("menu_name", name)
                 .eq("menu_path", path);
-        return this.count() > 0;
+        return baseMapper.selectCount(wrapper) > 0;
     }
 }

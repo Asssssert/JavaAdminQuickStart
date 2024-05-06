@@ -36,7 +36,8 @@ public enum ResponseStatus {
     NOT_DATA(401, "没有数据"),
     PERMISSION_EXIST_ERROR(401, "权限已存在"),
     PERMISSION_NOT_EXIST_ERROR(401, "权限不存在"),
-    ID_NOT_FOUND(401,"ID不存在" );
+    MENU_EXIST_FOUND(401, "菜单已存在"),
+    MENU_NOT_FOUND(401,"菜单不存在" );
 
 
     private final int code;

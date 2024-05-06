@@ -36,6 +36,6 @@ public interface MenuController {
     Result<Page<Menu>> page(@RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size);
 
     @GetMapping("/page/parentId")
-    Result<Page<Menu>> pageByParentId(@RequestParam(value = "page", defaultValue = "0") Integer parentId, @RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size);
+    Result<Page<Menu>> pageByParentId(@RequestParam(value = "parentId", defaultValue = "0") Integer parentId, @RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size);
 
 }

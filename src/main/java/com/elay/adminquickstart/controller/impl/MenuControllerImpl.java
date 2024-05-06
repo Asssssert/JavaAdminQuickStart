@@ -27,7 +27,7 @@ public class MenuControllerImpl implements MenuController {
         if (menuService.add(params)) {
             return Result.ok(ResponseStatus.SUCCESS);
         }
-        return Result.err(ResponseStatus.ID_NOT_FOUND);
+        return Result.err(ResponseStatus.MENU_EXIST_FOUND);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class MenuControllerImpl implements MenuController {
         if (menuService.upd(params)) {
             return Result.ok(ResponseStatus.SUCCESS);
         }
-        return Result.err(ResponseStatus.ID_NOT_FOUND);
+        return Result.err(ResponseStatus.MENU_NOT_FOUND);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class MenuControllerImpl implements MenuController {
         if (menuService.removeById(userId)) {
             return Result.ok(ResponseStatus.SUCCESS);
         }
-        return Result.err(ResponseStatus.ID_NOT_FOUND);
+        return Result.err(ResponseStatus.MENU_NOT_FOUND);
     }
 
     @Override
@@ -67,7 +67,10 @@ public class MenuControllerImpl implements MenuController {
 
     @Override
     public Result<Page<Menu>> pageByParentId(Integer parentId, Integer page, Integer size) {
-//        Page<Menu> data = menuService.pageByParentId(parentId, page, size);
-        return null;
+        Page<Menu> data = menuService.pageByParentId(parentId, page, size);
+        if (data != null) {
+            return Result.ok(ResponseStatus.SUCCESS, data);
+        }
+        return Result.err(ResponseStatus.NOT_DATA, null);
     }
 }
