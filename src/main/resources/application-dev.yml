@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/adminquickstart?useSSL=false&serverTimezone=UTC
     username: root
-    password: iamlilei
+    password: 123456
     #http://localhost:8888/druid/stat-view
     # Druid的其他属性配置
     druid:
@@ -25,7 +25,7 @@ spring:
         enabled: true                                       # 是否开启 StatViewServlet
         allow: 127.0.0.1                                    # 访问监控页面 白名单，默认127.0.0.1
 #        deny: 192.168.56.1                                  # 访问监控页面 黑名单
-        login-username: admin                               # 访问监控页面 登陆账号
+        login-username: root                               # 访问监控页面 登陆账号
         login-password: 123456                               # 访问监控页面 登陆密码
       filter:
         stat:

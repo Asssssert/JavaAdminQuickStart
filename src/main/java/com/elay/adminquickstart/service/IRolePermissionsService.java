@@ -14,4 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IRolePermissionsService extends IService<RolePermissions> {
 
+    void delByPermissionId(Integer permissionId);
+
+    void delByRoleId(Integer roleId);
 }

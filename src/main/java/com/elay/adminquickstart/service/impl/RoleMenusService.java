@@ -1,5 +1,6 @@
 package com.elay.adminquickstart.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.elay.adminquickstart.entity.RoleMenus;
 import com.elay.adminquickstart.mapper.RoleMenusMapper;
 import com.elay.adminquickstart.service.IRoleMenusService;
@@ -17,4 +18,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class RoleMenusService extends ServiceImpl<RoleMenusMapper, RoleMenus> implements IRoleMenusService {
 
+    @Override
+    public void delByRoleId(Integer roleId) {
+        QueryWrapper<RoleMenus> wrapper = new QueryWrapper<>();
+        wrapper.eq("role_id",roleId);
+        baseMapper.delete(wrapper);
+    }
+
+    @Override
+    public void delByMenuId(Integer menuId) {
+        QueryWrapper<RoleMenus> wrapper = new QueryWrapper<>();
+        wrapper.eq("menu_id",menuId);
+        baseMapper.delete(wrapper);
+    }
 }

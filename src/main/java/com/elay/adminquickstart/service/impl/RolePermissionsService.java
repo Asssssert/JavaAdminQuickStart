@@ -1,5 +1,7 @@
 package com.elay.adminquickstart.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.elay.adminquickstart.entity.RoleMenus;
 import com.elay.adminquickstart.entity.RolePermissions;
 import com.elay.adminquickstart.mapper.RolePermissionsMapper;
 import com.elay.adminquickstart.service.IRolePermissionsService;
@@ -18,4 +20,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class RolePermissionsService extends ServiceImpl<RolePermissionsMapper, RolePermissions> implements IRolePermissionsService {
 
+    @Override
+    public void delByPermissionId(Integer permissionId) {
+        QueryWrapper<RolePermissions> wrapper = new QueryWrapper<>();
+        wrapper.eq("permission_id",permissionId);
+        baseMapper.delete(wrapper);
+    }
+
+    @Override
+    public void delByRoleId(Integer roleId) {
+        QueryWrapper<RolePermissions> wrapper = new QueryWrapper<>();
+        wrapper.eq("role_id",roleId);
+        baseMapper.delete(wrapper);
+    }
 }

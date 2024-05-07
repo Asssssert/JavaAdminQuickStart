@@ -1,26 +1,23 @@
 package com.elay.adminquickstart.controller.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.json.JSON;
-import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.elay.adminquickstart.controller.PermissionController;
 import com.elay.adminquickstart.emus.ResponseStatus;
 import com.elay.adminquickstart.entity.Permissions;
-import com.elay.adminquickstart.entity.Roles;
+import com.elay.adminquickstart.entity.RolePermissions;
 import com.elay.adminquickstart.request.permission.AddPermissionReq;
 import com.elay.adminquickstart.request.permission.UpdPermissionReq;
 import com.elay.adminquickstart.response.Result;
 import com.elay.adminquickstart.response.permission.AdminPermissionsResp;
 import com.elay.adminquickstart.service.impl.PermissionsService;
+import com.elay.adminquickstart.service.impl.RolePermissionsService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author LI
@@ -31,6 +28,8 @@ import java.util.stream.Collectors;
 public class PermissionControllerImpl implements PermissionController {
     @Resource
     private PermissionsService permissionsService;
+    @Resource
+    private RolePermissionsService rolePermissionsService;
 
     @Override
     public Result<Void> add(AddPermissionReq params) {
@@ -50,16 +49,18 @@ public class PermissionControllerImpl implements PermissionController {
     }
 
     @Override
-    public Result<Void> del(Integer userId) {
-        if (!permissionsService.removeById(userId)) {
+    public Result<Void> del(Integer permissionId) {
+        if (!permissionsService.removeById(permissionId)) {
             return Result.err(ResponseStatus.PERMISSION_NOT_EXIST_ERROR);
         }
+        //删除角色权限管理表
+        rolePermissionsService.delByPermissionId(permissionId);
         return Result.ok(ResponseStatus.SUCCESS);
     }
 
     @Override
-    public Result<Permissions> get(Integer userId) {
-        Permissions byId = permissionsService.getById(userId);
+    public Result<Permissions> get(Integer permissionId) {
+        Permissions byId = permissionsService.getById(permissionId);
         if (byId == null) {
             return Result.err(ResponseStatus.PERMISSION_NOT_EXIST_ERROR, null);
         }
@@ -90,23 +91,21 @@ public class PermissionControllerImpl implements PermissionController {
     public Result<Page> pageByParentId(Integer parentId, Integer page, Integer size) {
         Page list = permissionsService.pageByParendId(parentId, new Page<>(page, size));
         if (list != null) {
-
             return Result.ok(ResponseStatus.SUCCESS, list);
         }
-
         return Result.err(ResponseStatus.NOT_FOUND, null);
     }
 
     private AdminPermissionsResp addNode(AdminPermissionsResp node, Integer parentId, List<Permissions> permissionsList) {
         List<AdminPermissionsResp> childrens = new ArrayList<>();
         permissionsList.forEach(item -> {
-            if (item.getPermissionParentId() == parentId) {
+            if (item.getPermissionParentId().equals(parentId)) {
                 AdminPermissionsResp resp = new AdminPermissionsResp();
                 BeanUtil.copyProperties(item, resp);
                 childrens.add(resp);
             }
         });
-        if(childrens.size()>0){
+        if (childrens.size() > 0) {
             node.setHasChildren(true);
         }
         node.setChildren(childrens);

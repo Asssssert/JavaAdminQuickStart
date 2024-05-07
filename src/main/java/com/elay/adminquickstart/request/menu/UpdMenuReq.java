@@ -28,7 +28,7 @@ public class UpdMenuReq {
     /**
      * 父菜单ID
      */
-    @NotBlank(message = "父菜单ID不能为空")
+    @NotNull(message = "父菜单ID不能为空")
     private Integer parentMenuId;
 
     /**

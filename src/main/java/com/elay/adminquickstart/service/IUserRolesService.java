@@ -13,4 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUserRolesService extends IService<UserRoles> {
 
+    void delByRoleId(Integer roleId);
+
+    void delByUserId(Integer userId);
 }

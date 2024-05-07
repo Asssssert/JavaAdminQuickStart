@@ -13,4 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IRoleMenusService extends IService<RoleMenus> {
 
+    void delByRoleId(Integer roleId);
+
+    void delByMenuId(Integer menuId);
 }

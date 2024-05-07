@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.elay.adminquickstart.entity.Users;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.elay.adminquickstart.request.auth.LoginReq;
+import com.elay.adminquickstart.request.user.AdminUpdUserReq;
 
 /**
  * <p>
@@ -19,4 +20,6 @@ public interface IUsersService extends IService<Users> {
     boolean login(LoginReq params);
 
     Page<Users> searchByKey(String key, Integer page, Integer size);
+
+    boolean upd(Integer userId, AdminUpdUserReq params);
 }

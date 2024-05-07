@@ -24,9 +24,8 @@ public class RolesService extends ServiceImpl<RolesMapper, Roles> implements IRo
 
     @Override
     public boolean add(AddRoleReq params) {
-        QueryWrapper<Roles> wrapper = new QueryWrapper<>();
-        wrapper.eq("role_name", params.getRoleName());
-        if (this.count(wrapper) > 0) {
+        //存在相同的身份
+        if (existByRoleName(params.getRoleName())) {
             return false;
         }
         Roles roles = new Roles();
@@ -37,10 +36,20 @@ public class RolesService extends ServiceImpl<RolesMapper, Roles> implements IRo
     @Override
     public boolean upd(UpdRoleReq params) {
         Roles roles = this.getById(params.getRoleId());
+        //存在相同的身份
+        if (existByRoleName(params.getRoleName())) {
+            return false;
+        }
         if (roles != null) {
             BeanUtil.copyProperties(params, roles);
             return this.updateById(roles);
         }
         return false;
+    }
+
+    private boolean existByRoleName(String roleName) {
+        QueryWrapper<Roles> wrapper = new QueryWrapper<>();
+        wrapper.eq("role_name", roleName);
+        return this.count(wrapper) > 0 ? true : false;
     }
 }

@@ -4,12 +4,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.elay.adminquickstart.controller.RoleController;
 import com.elay.adminquickstart.emus.ResponseStatus;
 import com.elay.adminquickstart.entity.Roles;
-import com.elay.adminquickstart.request.auth.RegisterReq;
 import com.elay.adminquickstart.request.role.AddRoleReq;
 import com.elay.adminquickstart.request.role.UpdRoleReq;
 import com.elay.adminquickstart.response.Result;
+import com.elay.adminquickstart.service.impl.RoleMenusService;
+import com.elay.adminquickstart.service.impl.RolePermissionsService;
 import com.elay.adminquickstart.service.impl.RolesService;
+import com.elay.adminquickstart.service.impl.UserRolesService;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,6 +28,12 @@ import java.util.List;
 public class RoleControllerImpl implements RoleController {
     @Resource
     private RolesService rolesService;
+    @Resource
+    private UserRolesService userRolesService;
+    @Resource
+    private RoleMenusService roleMenusService;
+    @Resource
+    private RolePermissionsService rolePermissionsService;
 
     @Override
     public Result<Void> add(AddRoleReq params) {
@@ -43,16 +52,20 @@ public class RoleControllerImpl implements RoleController {
     }
 
     @Override
-    public Result<Void> del(Integer userId) {
-        if (!rolesService.removeById(userId)) {
+    public Result<Void> del(Integer roleId) {
+        if (!rolesService.removeById(roleId)) {
             return Result.err(ResponseStatus.ROLE_NOT_EXIST);
         }
+        //删除关联关系
+        userRolesService.delByRoleId(roleId);
+        roleMenusService.delByRoleId(roleId);
+        rolePermissionsService.delByRoleId(roleId);
         return Result.ok(ResponseStatus.SUCCESS);
     }
 
     @Override
-    public Result<Roles> get(Integer userId) {
-        Roles roles = rolesService.getById(userId);
+    public Result<Roles> get(Integer roleId) {
+        Roles roles = rolesService.getById(roleId);
         if (roles != null) {
             return Result.ok(ResponseStatus.SUCCESS, roles);
         }
@@ -71,7 +84,7 @@ public class RoleControllerImpl implements RoleController {
     @Override
     public Result<List<Roles>> list() {
         List<Roles> rolesList = rolesService.list();
-        if(rolesList == null){
+        if (rolesList == null) {
             return Result.err(ResponseStatus.NOT_DATA, null);
         }
         return Result.ok(ResponseStatus.SUCCESS, rolesList);

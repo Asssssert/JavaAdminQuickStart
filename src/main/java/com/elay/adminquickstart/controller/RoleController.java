@@ -32,10 +32,10 @@ public interface RoleController {
     Result<Void> upd(@RequestBody @Valid UpdRoleReq params);
 
     @DeleteMapping("/{roleId}")
-    Result<Void> del(@PathVariable("roleId") @NotNull(message = "角色ID不能为空") Integer userId);
+    Result<Void> del(@PathVariable("roleId") @NotNull(message = "角色ID不能为空") Integer roleId);
 
     @GetMapping("/{roleId}")
-    Result<Roles> get(@PathVariable("roleId") @NotNull(message = "角色ID不能为空") Integer userId);
+    Result<Roles> get(@PathVariable("roleId") @NotNull(message = "角色ID不能为空") Integer roleId);
 
     @GetMapping("/page")
     Result<Page> page(@RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size);

@@ -8,8 +8,10 @@ import com.elay.adminquickstart.entity.Users;
 import com.elay.adminquickstart.request.user.AdminUpdUserReq;
 import com.elay.adminquickstart.response.Result;
 import com.elay.adminquickstart.response.user.AdminUserResp;
+import com.elay.adminquickstart.service.impl.UserRolesService;
 import com.elay.adminquickstart.service.impl.UsersService;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,10 +27,16 @@ import java.util.List;
 public class UserControllerImpl implements UserController {
     @Resource
     private UsersService usersService;
+    @Resource
+    private UserRolesService userRolesService;
 
     @Override
-    public Result<Void> upd(AdminUpdUserReq params) {
-        return null;
+    public Result<Void> upd(Integer userId, AdminUpdUserReq params) {
+        boolean flag = usersService.upd(userId, params);
+        if (flag) {
+            return Result.ok(ResponseStatus.SUCCESS, null);
+        }
+        return Result.err(ResponseStatus.USERNAME_PASSWORD_ERROR);
     }
 
     @Override
@@ -37,6 +45,8 @@ public class UserControllerImpl implements UserController {
         if (!b) {
             return Result.err(ResponseStatus.USER_NOT_FOUND, null);
         }
+        //删除用户角色关联表
+        userRolesService.delByUserId(userId);
         return Result.ok(ResponseStatus.SUCCESS, null);
     }
 

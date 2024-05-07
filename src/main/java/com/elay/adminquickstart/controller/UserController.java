@@ -24,7 +24,7 @@ public interface UserController<T> {
      * @return
      */
     @PutMapping("/{userId}")
-    Result<Void> upd(@RequestBody @Valid AdminUpdUserReq params);
+    Result<Void> upd(@PathVariable("userId") @NotNull(message = "用户ID不能为空") Integer userId ,@RequestBody @Valid AdminUpdUserReq params);
 
     /**
      * 删除用户

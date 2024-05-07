@@ -26,14 +26,14 @@ public interface MenuController {
     @PostMapping("/upd")
     Result<Void> upd(@RequestBody @Valid UpdMenuReq params);
 
-    @DeleteMapping("/{roleId}")
-    Result<Void> del(@PathVariable("roleId") @NotNull(message = "菜单ID不能为空") Integer userId);
+    @DeleteMapping("/{menuId}")
+    Result<Void> del(@PathVariable("menuId") @NotNull(message = "菜单ID不能为空") Integer menuId);
 
-    @GetMapping("/{roleId}")
-    Result<Menu> get(@PathVariable("roleId") @NotNull(message = "菜单ID不能为空") Integer userId);
+    @GetMapping("/{menuId}")
+    Result<Menu> get(@PathVariable("menuId") @NotNull(message = "菜单ID不能为空") Integer menuId);
 
     @GetMapping("/page")
-    Result<Page<Menu>> page(@RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size);
+    Result<Page> page(@RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size);
 
     @GetMapping("/page/parentId")
     Result<Page<Menu>> pageByParentId(@RequestParam(value = "parentId", defaultValue = "0") Integer parentId, @RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size);

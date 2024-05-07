@@ -13,8 +13,8 @@ import java.util.Date;
 @Data
 public class AdminUpdUserReq {
 
-    @NotNull(message = "用户ID不能为空")
-    private Integer userId;
+//    @NotNull(message = "用户ID不能为空")
+//    private Integer userId;
 
     /**
      * 用户名
@@ -45,12 +45,12 @@ public class AdminUpdUserReq {
     /**
      * 创建时间
      */
-    private Date createdAt;
+//    private Date createdAt;
 
     /**
      * 修改时间
      */
-    private Date updatedAt;
+//    private Date updatedAt;
 
     /**
      * 性别（0男，1女，2其他

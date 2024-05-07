@@ -40,6 +40,7 @@ public class PermissionsService extends ServiceImpl<PermissionsMapper, Permissio
             if (!exitByUsername(params.getPermissionName())) {
                 return false;
             }
+            BeanUtil.copyProperties(params, byId);
             return this.updateById(byId);
         }
         return false;

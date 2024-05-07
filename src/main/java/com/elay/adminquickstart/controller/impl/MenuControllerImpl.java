@@ -1,16 +1,24 @@
 package com.elay.adminquickstart.controller.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.elay.adminquickstart.controller.MenuController;
 import com.elay.adminquickstart.emus.ResponseStatus;
 import com.elay.adminquickstart.entity.Menu;
+import com.elay.adminquickstart.entity.Permissions;
 import com.elay.adminquickstart.request.menu.AddMenuReq;
 import com.elay.adminquickstart.request.menu.UpdMenuReq;
 import com.elay.adminquickstart.response.Result;
+import com.elay.adminquickstart.response.menu.AdminMenuResp;
+import com.elay.adminquickstart.response.permission.AdminPermissionsResp;
 import com.elay.adminquickstart.service.impl.MenuService;
+import com.elay.adminquickstart.service.impl.RoleMenusService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author LI
@@ -21,6 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MenuControllerImpl implements MenuController {
     @Resource
     private MenuService menuService;
+    @Resource
+    private RoleMenusService roleMenusService;
 
     @Override
     public Result<Void> add(AddMenuReq params) {
@@ -39,16 +49,18 @@ public class MenuControllerImpl implements MenuController {
     }
 
     @Override
-    public Result<Void> del(Integer userId) {
-        if (menuService.removeById(userId)) {
+    public Result<Void> del(Integer menuId) {
+        if (menuService.removeById(menuId)) {
             return Result.ok(ResponseStatus.SUCCESS);
         }
+        //删除角色菜单关联表
+        roleMenusService.delByMenuId(menuId);
         return Result.err(ResponseStatus.MENU_NOT_FOUND);
     }
 
     @Override
-    public Result<Menu> get(Integer userId) {
-        Menu byId = menuService.getById(userId);
+    public Result<Menu> get(Integer menuId) {
+        Menu byId = menuService.getById(menuId);
         if (byId != null) {
             return Result.ok(ResponseStatus.SUCCESS, byId);
         }
@@ -56,9 +68,20 @@ public class MenuControllerImpl implements MenuController {
     }
 
     @Override
-    public Result<Page<Menu>> page(Integer page, Integer size) {
-        Page<Menu> data = menuService.page(new Page<>(page, size));
+    public Result<Page> page(Integer page, Integer size) {
+        Page data = menuService.page(new Page<>(page, size));
         if (data != null) {
+            List<Menu> records = data.getRecords();
+            List<AdminMenuResp> resp = new ArrayList<>();
+            for (Menu item : records) {
+                if(item.getParentMenuId()==0){
+                    AdminMenuResp ps = new AdminMenuResp();
+                    BeanUtil.copyProperties(item, ps);
+                    AdminMenuResp node = addNode(ps, item.getMenuId(), records);
+                    resp.add(node);
+                }
+            }
+            data.setRecords(resp);
             return Result.ok(ResponseStatus.SUCCESS, data);
         }
         return Result.err(ResponseStatus.NOT_DATA, null);
@@ -72,5 +95,21 @@ public class MenuControllerImpl implements MenuController {
             return Result.ok(ResponseStatus.SUCCESS, data);
         }
         return Result.err(ResponseStatus.NOT_DATA, null);
+    }
+
+    private AdminMenuResp addNode(AdminMenuResp node, Integer parentId, List<Menu> list) {
+        List<AdminMenuResp> childrens = new ArrayList<>();
+        list.forEach(item -> {
+            if (item.getParentMenuId().equals(parentId)) {
+                AdminMenuResp resp = new AdminMenuResp();
+                BeanUtil.copyProperties(item, resp);
+                childrens.add(resp);
+            }
+        });
+        if (childrens.size() > 0) {
+            node.setHasChildren(true);
+        }
+        node.setChildren(childrens);
+        return node;
     }
 }

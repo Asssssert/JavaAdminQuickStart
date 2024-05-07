@@ -29,15 +29,15 @@ public interface PermissionController {
     Result<Void> upd(@RequestBody @Valid UpdPermissionReq params);
 
     @DeleteMapping("/{permissionId}")
-    Result<Void> del(@PathVariable("permissionId") @NotNull(message = "权限ID不能为空") Integer userId);
+    Result<Void> del(@PathVariable("permissionId") @NotNull(message = "权限ID不能为空") Integer permissionId);
 
     @GetMapping("/{permissionId}")
-    Result<Permissions> get(@PathVariable("permissionId") @NotNull(message = "权限ID不能为空") Integer userId);
+    Result<Permissions> get(@PathVariable("permissionId") @NotNull(message = "权限ID不能为空") Integer permissionId);
 
     @GetMapping("/page")
     Result<Page> page(@RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size);
 
-    @GetMapping("/page/{parentId}")
-    Result<Page> pageByParentId(@PathVariable("parentId") @DefaultValue("0") Integer parentId, @RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size);
+    @GetMapping("/page/parentId")
+    Result<Page> pageByParentId(@RequestParam(value = "parentId", defaultValue = "0") Integer parentId, @RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size);
 
 }
