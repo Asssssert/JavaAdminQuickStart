@@ -19,6 +19,7 @@
         <mybatis-plus-generator.version>3.3.0</mybatis-plus-generator.version>
         <velocity-engine-core.version>2.3</velocity-engine-core.version>
         <hutool.version>5.8.27</hutool.version>
+        <druid-version>1.2.22</druid-version>
     </properties>
     <dependencies>
         <dependency>
@@ -41,6 +42,10 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -66,6 +71,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-3-starter</artifactId>
+            <version>${druid-version}</version>
         </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
