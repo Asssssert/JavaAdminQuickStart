@@ -5,6 +5,8 @@ import com.elay.adminquickstart.entity.Roles;
 import com.elay.adminquickstart.request.auth.LoginReq;
 import com.elay.adminquickstart.request.auth.RegisterReq;
 import com.elay.adminquickstart.request.role.AddRoleReq;
+import com.elay.adminquickstart.request.role.UpdRoleMenuReq;
+import com.elay.adminquickstart.request.role.UpdRolePermissionReq;
 import com.elay.adminquickstart.request.role.UpdRoleReq;
 import com.elay.adminquickstart.response.Result;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,5 +44,17 @@ public interface RoleController {
 
     @GetMapping("/list")
     Result<List<Roles>> list();
+
+    @PostMapping("/upd/permission")
+    Result<Void> updPermission(@RequestBody @Valid UpdRolePermissionReq params);
+
+    @PostMapping("/upd/menu")
+    Result<Void> updMenu(@RequestBody @Valid UpdRoleMenuReq params);
+
+    @GetMapping("/permission/{roleId}")
+    Result<List<Integer>> getPermissionIds(@PathVariable("roleId") @NotNull(message = "角色ID不能为空") Integer roleId);
+
+    @GetMapping("/menu/{roleId}")
+    Result<List<Integer>> getMenuIds(@PathVariable("roleId") @NotNull(message = "角色ID不能为空") Integer roleId);
 
 }

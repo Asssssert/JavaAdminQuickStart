@@ -4,8 +4,11 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.elay.adminquickstart.controller.UserController;
 import com.elay.adminquickstart.emus.ResponseStatus;
+import com.elay.adminquickstart.entity.RoleMenus;
+import com.elay.adminquickstart.entity.UserRoles;
 import com.elay.adminquickstart.entity.Users;
 import com.elay.adminquickstart.request.user.AdminUpdUserReq;
+import com.elay.adminquickstart.request.user.UpdUserRoleReq;
 import com.elay.adminquickstart.response.Result;
 import com.elay.adminquickstart.response.user.AdminUserResp;
 import com.elay.adminquickstart.service.impl.UserRolesService;
@@ -77,5 +80,22 @@ public class UserControllerImpl implements UserController {
         });
         usersPage.setRecords(data);
         return Result.ok(ResponseStatus.SUCCESS, usersPage);
+    }
+
+    @Override
+    public Result<Void> updRoleIds(UpdUserRoleReq params) {
+        if (usersService.getById(params.getUserId()) == null) {
+            return Result.err(ResponseStatus.USER_NOT_FOUND);
+        }
+        if(!userRolesService.updRoleIds(params)){
+            return Result.err(ResponseStatus.ROLE_EXIST);
+        }
+        return Result.ok(ResponseStatus.SUCCESS);
+    }
+
+    @Override
+    public Result<List<Integer>> getUserIds(Integer userId) {
+        List<Integer> menuIds = userRolesService.listByUserId(userId).stream().map(UserRoles::getRoleId).toList();
+        return Result.ok(ResponseStatus.SUCCESS, menuIds);
     }
 }

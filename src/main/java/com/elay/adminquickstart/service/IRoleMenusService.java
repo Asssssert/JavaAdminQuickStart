@@ -1,7 +1,10 @@
 package com.elay.adminquickstart.service;
 
-import com.elay.adminquickstart.entity.RoleMenus;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.elay.adminquickstart.entity.RoleMenus;
+import com.elay.adminquickstart.request.role.UpdRoleMenuReq;
+
+import java.util.List;
 
 /**
  * <p>
@@ -16,4 +19,9 @@ public interface IRoleMenusService extends IService<RoleMenus> {
     void delByRoleId(Integer roleId);
 
     void delByMenuId(Integer menuId);
+
+    List<RoleMenus> listByRoleId(Integer roleId);
+
+    boolean updMenu(UpdRoleMenuReq params);
+    
 }

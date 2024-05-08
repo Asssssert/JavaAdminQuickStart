@@ -2,6 +2,10 @@ package com.elay.adminquickstart.service;
 
 import com.elay.adminquickstart.entity.UserRoles;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.elay.adminquickstart.request.user.UpdUserRoleReq;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * <p>
@@ -16,4 +20,8 @@ public interface IUserRolesService extends IService<UserRoles> {
     void delByRoleId(Integer roleId);
 
     void delByUserId(Integer userId);
+
+    boolean updRoleIds(UpdUserRoleReq params);
+
+    List<UserRoles> listByUserId(Integer userId);
 }

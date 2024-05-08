@@ -2,12 +2,15 @@ package com.elay.adminquickstart.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.elay.adminquickstart.request.user.AdminUpdUserReq;
+import com.elay.adminquickstart.request.user.UpdUserRoleReq;
 import com.elay.adminquickstart.response.Result;
 import com.elay.adminquickstart.response.user.AdminUserResp;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author LI
@@ -45,7 +48,7 @@ public interface UserController<T> {
     Result<AdminUserResp> get(@PathVariable("userId") @NotNull(message = "用户ID不能为空") Integer userId);
 
     /**
-     * 搜索用户
+     * 搜索用
      *
      * @param key
      * @param page
@@ -55,4 +58,9 @@ public interface UserController<T> {
     @GetMapping("/search")
     Result<Page> searchByKey(@RequestParam(value = "key", defaultValue = "") String key, @RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "size", defaultValue = "10") Integer size);
 
+    @PostMapping("/upd/role")
+    Result<Void> updRoleIds(@RequestBody @Valid UpdUserRoleReq params);
+
+    @GetMapping("/role/{userId}")
+    Result<List<Integer>> getUserIds(@PathVariable("userId") @NotNull(message = "用户ID不能为空") Integer userId);
 }

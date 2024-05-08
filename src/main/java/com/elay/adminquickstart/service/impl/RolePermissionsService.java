@@ -4,9 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.elay.adminquickstart.entity.RoleMenus;
 import com.elay.adminquickstart.entity.RolePermissions;
 import com.elay.adminquickstart.mapper.RolePermissionsMapper;
+import com.elay.adminquickstart.request.role.UpdRolePermissionReq;
 import com.elay.adminquickstart.service.IRolePermissionsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -32,5 +36,29 @@ public class RolePermissionsService extends ServiceImpl<RolePermissionsMapper, R
         QueryWrapper<RolePermissions> wrapper = new QueryWrapper<>();
         wrapper.eq("role_id",roleId);
         baseMapper.delete(wrapper);
+    }
+
+    @Override
+    public boolean updPermission(UpdRolePermissionReq params) {
+        //先删除现有的权限
+        QueryWrapper<RolePermissions> wrapper = new QueryWrapper<>();
+        wrapper.eq("role_id",params.getRoleId());
+        baseMapper.delete(wrapper);
+        //添加新的的权限
+        List<RolePermissions> rps = new ArrayList<>();
+        for (Integer permissionId : params.getPermissionIds()) {
+            RolePermissions permissions = new RolePermissions();
+            permissions.setRoleId(params.getRoleId());
+            permissions.setPermissionId(permissionId);
+            rps.add(permissions);
+        }
+        return saveBatch(rps);
+    }
+
+    @Override
+    public List<RolePermissions> listByRoleId(Integer roleId) {
+        QueryWrapper<RolePermissions> wrapper = new QueryWrapper<>();
+        wrapper.eq("role_id",roleId);
+        return baseMapper.selectList(wrapper);
     }
 }

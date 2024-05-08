@@ -37,6 +37,8 @@ public enum ResponseStatus {
     PERMISSION_EXIST_ERROR(401, "权限已存在"),
     PERMISSION_NOT_EXIST_ERROR(401, "权限不存在"),
     MENU_EXIST_FOUND(401, "菜单已存在"),
+    ROLE_PERMISSION_UPD_ERROR(401, "身份权限修改失败"),
+    ROLE_MENU_UPD_ERROR(401, "身份菜单修改失败"),
     MENU_NOT_FOUND(401,"菜单不存在" );
 
 

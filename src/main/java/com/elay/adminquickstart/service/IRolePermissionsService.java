@@ -2,6 +2,9 @@ package com.elay.adminquickstart.service;
 
 import com.elay.adminquickstart.entity.RolePermissions;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.elay.adminquickstart.request.role.UpdRolePermissionReq;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +20,8 @@ public interface IRolePermissionsService extends IService<RolePermissions> {
     void delByPermissionId(Integer permissionId);
 
     void delByRoleId(Integer roleId);
+
+    boolean updPermission(UpdRolePermissionReq params);
+
+    List<RolePermissions> listByRoleId(Integer roleId);
 }

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.elay.adminquickstart.entity.Roles;
 import com.elay.adminquickstart.mapper.RolesMapper;
 import com.elay.adminquickstart.request.role.AddRoleReq;
+import com.elay.adminquickstart.request.role.UpdRolePermissionReq;
 import com.elay.adminquickstart.request.role.UpdRoleReq;
 import com.elay.adminquickstart.service.IRolesService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -46,6 +47,8 @@ public class RolesService extends ServiceImpl<RolesMapper, Roles> implements IRo
         }
         return false;
     }
+
+
 
     private boolean existByRoleName(String roleName) {
         QueryWrapper<Roles> wrapper = new QueryWrapper<>();
