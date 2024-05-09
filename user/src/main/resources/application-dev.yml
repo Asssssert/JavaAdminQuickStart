@@ -1,12 +1,13 @@
 server:
   port: 8888
 spring:
-  datasource:
-    #redis
+  #redis
+  data:
     redis:
-      database: 0
+      host: 127.0.0.1
       port: 6379
-      host: localhost
+      database: 0
+  datasource:
     #mysql
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -44,6 +45,3 @@ management:
     web:
       exposure:
         include: '*'
-
-
-

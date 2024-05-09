@@ -11,6 +11,8 @@ import com.elay.user.authority.mapper.PermissionsMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 权限表
@@ -53,9 +55,23 @@ public class PermissionsService extends ServiceImpl<PermissionsMapper, Permissio
     }
 
     @Override
-    public Page<Permissions> pageByParendId(Integer parentId, Page objectPage) {
+    public Page<Permissions> pageByParentId(Integer parentId, Page objectPage) {
         QueryWrapper<Permissions> wrapper = new QueryWrapper<>();
         wrapper.eq("permission_parent_id", parentId);
         return this.page(objectPage, wrapper);
+    }
+
+    @Override
+    public List<Permissions> getPermissionByType(int permissionType) {
+        QueryWrapper<Permissions> wrapper = new QueryWrapper<>();
+        wrapper.eq("permission_type", permissionType);
+        return baseMapper.selectList(wrapper);
+    }
+
+    @Override
+    public List<Permissions> getPermissionParentId(int permissionType) {
+        QueryWrapper<Permissions> wrapper = new QueryWrapper<>();
+        wrapper.ne("permission_parent_id", permissionType);
+        return baseMapper.selectList(wrapper);
     }
 }

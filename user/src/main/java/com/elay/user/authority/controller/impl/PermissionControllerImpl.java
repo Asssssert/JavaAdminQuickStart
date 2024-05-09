@@ -88,7 +88,7 @@ public class PermissionControllerImpl implements PermissionController {
 
     @Override
     public Result<Page> pageByParentId(Integer parentId, Integer page, Integer size) {
-        Page list = permissionsService.pageByParendId(parentId, new Page<>(page, size));
+        Page list = permissionsService.pageByParentId(parentId, new Page<>(page, size));
         if (list != null) {
             return Result.ok(ResponseStatus.SUCCESS, list);
         }

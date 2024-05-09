@@ -34,9 +34,13 @@ public class Permissions implements Serializable {
     private String permissionName;
 
     /**
-     * 0是菜单，1是接口
+     * 0是菜单
      */
     private Integer permissionParentId;
+    /**
+     * 0是菜单，1是接口
+     */
+    private Integer permissionType;
 
     /**
      * 权限代码

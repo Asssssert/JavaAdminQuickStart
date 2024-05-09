@@ -4,6 +4,9 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.elay.user.authority.entity.RolePermissions;
+import com.elay.user.authority.entity.Roles;
+import com.elay.user.authority.entity.UserRoles;
 import com.elay.user.authority.service.IUsersService;
 import com.elay.user.authority.entity.Users;
 import com.elay.user.authority.mapper.UsersMapper;
@@ -11,7 +14,13 @@ import com.elay.user.authority.request.auth.LoginReq;
 import com.elay.user.authority.request.auth.RegisterReq;
 import com.elay.user.authority.request.user.AdminUpdUserReq;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.elay.user.security.bean.UserRolesPerms;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -24,20 +33,30 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UsersService extends ServiceImpl<UsersMapper, Users> implements IUsersService {
+    @Resource
+    private UserRolesService userRolesService;
+    @Resource
+    private RolesService rolesService;
+    @Resource
+    private PermissionsService permissionsService;
+
+    @Resource
+    private RolePermissionsService rolePermissionsService;
+
 
     @Override
-    public boolean login(LoginReq params) {
+    public Users login(LoginReq params) {
         QueryWrapper<Users> wrapper = new QueryWrapper<>();
         wrapper
                 .eq("username", params.getUsername());
         Users getById = baseMapper.selectOne(wrapper);
         if (getById == null) {
-            return false;
+            return null;
         }
         if (!getById.getPasswodHash().equals(SecureUtil.md5(params.getPassword() + getById.getSalt()))) {
-            return false;
+            return null;
         }
-        return true;
+        return getById;
     }
 
     @Override
@@ -65,6 +84,42 @@ public class UsersService extends ServiceImpl<UsersMapper, Users> implements IUs
             return this.updateById(byId);
         }
         return false;
+    }
+
+    @Override
+    public Users findByUsername(String username) {
+        QueryWrapper<Users> wrapper = new QueryWrapper<>();
+        wrapper.eq("username", username)
+                .or()
+                .eq("email", username);
+        if (baseMapper.selectCount(wrapper) == 1) {
+            return baseMapper.selectOne(wrapper);
+        }
+        return null;
+    }
+
+    @Override
+    public UserRolesPerms getUserPermsByUsername(String username) {
+        Users users = findByUsername(username);
+        UserRolesPerms perms = new UserRolesPerms();
+        perms.setUser(users);
+        perms.setRolesList(userRolesService.listByUserId(users.getUserId())
+                .stream()
+                .map(UserRoles::getRoleId)
+                .map(rolesService::getById)
+                .collect(Collectors.toList()));
+        List<Roles> roles = perms.getRolesList();
+        roles.forEach(role -> {
+            perms.setPermissionsList(
+                    rolePermissionsService.listByRoleId(role.getRoleId())
+                            .stream()
+                            .map(RolePermissions:: getPermissionId)
+                            .map(permissionsService ::getById)
+                            .collect(Collectors.toList())
+            );
+        });
+
+        return perms;
     }
 
     public boolean register(RegisterReq params) {

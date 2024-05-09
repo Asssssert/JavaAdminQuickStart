@@ -6,6 +6,8 @@ import com.elay.user.authority.request.permission.UpdPermissionReq;
 import com.elay.user.authority.entity.Permissions;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 权限表
@@ -21,6 +23,9 @@ public interface IPermissionsService extends IService<Permissions> {
 
     boolean upd(UpdPermissionReq params);
 
-    Page<Permissions> pageByParendId(Integer parentId, Page objectPage);
+    Page<Permissions> pageByParentId(Integer parentId, Page objectPage);
 
+    List<Permissions> getPermissionByType(int permissionType);
+
+    List<Permissions> getPermissionParentId(int permissionType);
 }

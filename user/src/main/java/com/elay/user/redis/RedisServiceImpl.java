@@ -1,5 +1,6 @@
-package cm.elay.redis;
+package com.elay.user.redis;
 
+import com.elay.infra.constant.RedisConstants;
 import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -8,8 +9,6 @@ import org.springframework.util.CollectionUtils;
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
-import static cm.elay.constant.RedisConstants.REDIS_EXPIRE_TIME;
 
 
 @Service
@@ -63,7 +62,7 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public void set(String key, Object value) {
-        redisTemplate.opsForValue().set(key, value, REDIS_EXPIRE_TIME, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(key, value, RedisConstants.REDIS_EXPIRE_TIME, TimeUnit.SECONDS);
     }
 
     @Override

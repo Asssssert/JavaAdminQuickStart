@@ -3,6 +3,7 @@ package com.elay.user.authority.controller;
 import com.elay.user.authority.response.Result;
 import com.elay.user.authority.request.auth.LoginReq;
 import com.elay.user.authority.request.auth.RegisterReq;
+import com.elay.user.authority.response.user.LoginResp;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
@@ -27,7 +28,7 @@ public interface AuthController {
      * @return
      */
     @PostMapping("/login")
-    Result<Void> login(@RequestBody @Valid LoginReq params);
+    Result<LoginResp> login(@RequestBody @Valid LoginReq params);
 
     /**
      * 退出
@@ -35,7 +36,7 @@ public interface AuthController {
      * @return
      */
     @PostMapping("/logout")
-    Result<Void> logout();
+    Result logout();
 
     /**
      * 注册
@@ -44,7 +45,7 @@ public interface AuthController {
      * @return
      */
     @PostMapping("/register")
-    Result<Void> register(@RequestBody @Valid RegisterReq params);
+    Result register(@RequestBody @Valid RegisterReq params);
 
     /**
      * 获取验证码

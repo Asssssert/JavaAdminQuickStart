@@ -11,6 +11,7 @@
         <result column="permission_desc" property="permissionDesc" />
         <result column="permission_method" property="permissionMethod" />
         <result column="permission_api" property="permissionApi" />
+        <result column="permission_type" property="permissionType" />
     </resultMap>
 
 </mapper>

@@ -1,4 +1,4 @@
-package cm.elay.redis;
+package com.elay.user.redis;
 
 import java.util.Collection;
 
