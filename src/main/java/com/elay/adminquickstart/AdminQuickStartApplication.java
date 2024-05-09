@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan("com.elay.adminquickstart.mapper")
+@MapperScan("com.elay.adminquickstart.authority.mapper")
 public class AdminQuickStartApplication {
 
     public static void main(String[] args) {
