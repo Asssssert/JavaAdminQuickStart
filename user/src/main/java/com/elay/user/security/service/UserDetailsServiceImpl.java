@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author LI
  * @since 2024/5/9
@@ -22,13 +24,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        long startTime = System.currentTimeMillis();
         Users user = usersService.findByUsername(username);
+//        System.out.println(System.currentTimeMillis()-startTime);
         if (user == null) {
             throw new UsernameNotFoundException(ResponseStatus.LOGIN_FAIL.getMsg());
         }
         if (user.getState() != 0) {
             throw new RuntimeException(ResponseStatus.USER_STATE_FAIL.getMsg());
         }
-        return new IUserDetails(user, usersService.getUserPermsByUsername(username));
+        //不添加权限到用户对象，网络耗时太久
+        List<String> permList = usersService.getUserPermsByUsername(username);
+//        System.out.println(System.currentTimeMillis()-startTime);
+        return new IUserDetails(user, permList);
+//        return new IUserDetails(user, null);
     }
 }

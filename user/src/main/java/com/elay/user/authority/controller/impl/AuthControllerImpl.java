@@ -58,7 +58,7 @@ public class AuthControllerImpl implements AuthController {
     private HttpServletRequest hsr;
 
     @Override
-    public Result<LoginResp> login(@RequestBody @Valid LoginReq params) {
+    public Result login(@RequestBody @Valid LoginReq params) {
         //todo:验证码校验
         Users login = usersService.login(params);
         if (login != null) {
@@ -80,16 +80,16 @@ public class AuthControllerImpl implements AuthController {
             redisService.set(RedisConstants.REFRESH_TOKEN_PREFIX + login.getUsername(), refreshToken, JwtConstants.REF_TOKEN_EXPIRE_TIME);
             //添加该用户拥有权限
             List<String> permList = usersService.getUserPermsByUsername(login.getUsername());
-            List<SimpleGrantedAuthority> sgas = permList.stream().map(s -> new SimpleGrantedAuthority(s)).collect(Collectors.toList());
+            List<SimpleGrantedAuthority> simpleGrantedAuthorityList = permList.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPasswodHash());
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             IUserDetails loginUser = (IUserDetails) authentication.getPrincipal();
             redisService.set(RedisConstants.LOGIN_USER_PREFIX + login.getUsername(), loginUser, JwtConstants.JWT_EXPIRE_TIME);
-            redisService.set(RedisConstants.PERM_PREFIX + login.getUsername(), sgas, JwtConstants.JWT_EXPIRE_TIME);
+            redisService.set(RedisConstants.PERM_PREFIX + login.getUsername(), simpleGrantedAuthorityList, JwtConstants.JWT_EXPIRE_TIME);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             return Result.ok(ResponseStatus.LOGIN_SUCCESS, loginResp);
         }
-        return Result.err(ResponseStatus.LOGIN_FAIL, null);
+        return Result.err(ResponseStatus.LOGIN_FAIL);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class AuthControllerImpl implements AuthController {
             redisService.del(RedisConstants.PERM_PREFIX + userDetails.getUsername());
             redisService.del(RedisConstants.LOGIN_USER_PREFIX + userDetails.getUsername());
             SecurityContextHolder.clearContext();
-        }catch (Exception e){
+        } catch (Exception e) {
             return Result.err(ResponseStatus.LOGOUT_FAIL);
         }
         return Result.ok(ResponseStatus.LOGOUT_SUCCESS);

@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8888
 spring:
   #redis
   data:
@@ -11,9 +11,9 @@ spring:
     #mysql
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://1.15.184.83:3306/adminquickstart?useSSL=false&serverTimezone=UTC
-    username: adminquickstart
-    password: We37a3BcAZf78z84
+    url: jdbc:mysql://127.0.0.1:3306/adminquickstart?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
     #http://localhost:8888/druid/stat-view
     # Druid的其他属性配置
     druid:
@@ -45,6 +45,3 @@ management:
     web:
       exposure:
         include: '*'
-
-
-

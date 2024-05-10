@@ -2,4 +2,4 @@ spring:
   application:
     name: AdminQuickStart
   profiles:
-    active: dev
+    active: env

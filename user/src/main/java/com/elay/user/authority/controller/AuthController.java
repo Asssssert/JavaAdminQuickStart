@@ -28,7 +28,7 @@ public interface AuthController {
      * @return
      */
     @PostMapping("/login")
-    Result<LoginResp> login(@RequestBody @Valid LoginReq params);
+    Result login(@RequestBody @Valid LoginReq params);
 
     /**
      * 退出

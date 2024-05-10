@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author LI
@@ -24,19 +25,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties({"password","username","enabled","accountNonExpired", "accountNonLocked", "credentialsNonExpired", "authorities"})
-//@JsonIgnoreProperties(ignoreUnknown = true)
-//@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class IUserDetails implements UserDetails, Serializable {
     private Users user;
     private List<String> permList;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        ArrayList<SimpleGrantedAuthority> list = new ArrayList<>();
-        for (String code : permList) {
-            list.add(new SimpleGrantedAuthority(code));
-        }
-        return list;
+        return permList.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
+//        return null;
     }
 
     @Override

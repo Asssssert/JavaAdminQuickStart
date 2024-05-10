@@ -46,7 +46,6 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         List<Permissions> permsList = permissionsService.getPermissionParentId(PermConstants.PERMISSION_TYPE);
-
         //动态添加权限
         for (Permissions permissions : permsList) {
             System.out.println("地址:" + permissions.getPermissionApi() + "---权限:" + permissions.getPermissionCode());
