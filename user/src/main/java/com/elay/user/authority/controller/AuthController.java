@@ -58,4 +58,7 @@ public interface AuthController {
     @GetMapping("/test")
     Result test();
 
+    @GetMapping("/test2")
+    Result test2();
+
 }

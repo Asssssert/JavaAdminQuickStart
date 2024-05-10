@@ -23,36 +23,17 @@ public class RedisConfig {
 //    }
 
 
+    //编写我们自己的RedisTemplate(这是固定模板)
     @Bean
-    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
-
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-
-        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
-        redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
-        // 设置支持事物
-//        redisTemplate.setEnableTransactionSupport(true);
-        redisTemplate.afterPropertiesSet();
-        return redisTemplate;
+    public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory factory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(factory);
+        //设置key序列化
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
+        template.afterPropertiesSet();
+        return template;
     }
-
-    @Value("${spring.data.redis.host}")
-    private String redisHost;
-
-    @Value("${spring.data.redis.port}")
-    private int redisPort;
-
-    @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        LettuceConnectionFactory factory = new LettuceConnectionFactory(new RedisStandaloneConfiguration(redisHost, redisPort));
-        return factory;
-    }
-
-//    @Bean
-//    public TokenStore redisTokenStore(){
-//        return new RedisTokenStore(redisConnectionFactory);
-//    }
 }

@@ -2,6 +2,8 @@ package com.elay.user.security.bean;
 
 import com.elay.user.authority.entity.Permissions;
 import com.elay.user.authority.entity.Users;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +23,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class IUserDetails implements UserDetails, Serializable {
     private Users user;
     private List<String> permList;

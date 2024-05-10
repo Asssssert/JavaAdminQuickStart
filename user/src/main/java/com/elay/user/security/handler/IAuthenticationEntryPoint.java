@@ -17,7 +17,7 @@ import java.io.IOException;
 public class IAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        System.out.println("认证失败-"+authException.getMessage());
+        System.out.println("认证失败-AuthenticationEntryPoint-"+authException.getMessage());
         Result<Void> result = Result.err(ResponseStatus.FORBIDDEN);
         response.setStatus(200);
         response.setContentType("application/json");
