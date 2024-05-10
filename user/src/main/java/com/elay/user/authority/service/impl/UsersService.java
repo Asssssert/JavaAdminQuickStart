@@ -4,11 +4,8 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.elay.user.authority.entity.RolePermissions;
-import com.elay.user.authority.entity.Roles;
-import com.elay.user.authority.entity.UserRoles;
+import com.elay.user.authority.entity.*;
 import com.elay.user.authority.service.IUsersService;
-import com.elay.user.authority.entity.Users;
 import com.elay.user.authority.mapper.UsersMapper;
 import com.elay.user.authority.request.auth.LoginReq;
 import com.elay.user.authority.request.auth.RegisterReq;
@@ -99,29 +96,29 @@ public class UsersService extends ServiceImpl<UsersMapper, Users> implements IUs
     }
 
     @Override
-    public UserRolesPerms getUserPermsByUsername(String username) {
+    public List<String> getUserPermsByUsername(String username) {
         Users users = findByUsername(username);
-        UserRolesPerms perms = new UserRolesPerms();
-        perms.setUser(users);
-        perms.setRolesList(userRolesService.listByUserId(users.getUserId())
+//        UserRolesPerms perms = new UserRolesPerms();
+//        perms.setUser(users);
+        List<Roles> collect = userRolesService.listByUserId(users.getUserId())
                 .stream()
                 .map(UserRoles::getRoleId)
                 .map(rolesService::getById)
-                .collect(Collectors.toList()));
-        List<Roles> roles = perms.getRolesList();
-        roles.forEach(role -> {
-            perms.setPermissionsList(
-                    rolePermissionsService.listByRoleId(role.getRoleId())
-                            .stream()
-                            .map(RolePermissions:: getPermissionId)
-                            .map(permissionsService ::getById)
-                            .collect(Collectors.toList())
-            );
+                .collect(Collectors.toList());
+        ArrayList<String> strings = new ArrayList<>();
+        collect.forEach(role -> {
+            List<String> list = rolePermissionsService.listByRoleId(role.getRoleId())
+                    .stream()
+                    .map(RolePermissions::getPermissionId)
+                    .map(permissionsService::getById)
+                    .map(Permissions::getPermissionCode)
+                    .collect(Collectors.toList());
+            strings.addAll(list);
         });
-
-        return perms;
+        return strings;
     }
 
+    @Override
     public boolean register(RegisterReq params) {
         QueryWrapper<Users> wrapper = new QueryWrapper<Users>()
                 .eq("username", params.getUsername())

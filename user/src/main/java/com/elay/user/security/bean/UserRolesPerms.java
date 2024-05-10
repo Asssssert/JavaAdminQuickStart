@@ -13,7 +13,6 @@ import java.util.List;
  */
 @Data
 public class UserRolesPerms {
-    private Users user;
     private List<Roles> rolesList;
     private List<Permissions> permissionsList;
 }

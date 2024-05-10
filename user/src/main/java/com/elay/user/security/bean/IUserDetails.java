@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,16 +21,15 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class IUserDetails implements UserDetails {
+public class IUserDetails implements UserDetails, Serializable {
     private Users user;
-    private UserRolesPerms userRolesPerms;
+    private List<String> permList;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<Permissions> permissionDtos = userRolesPerms.getPermissionsList();
         ArrayList<SimpleGrantedAuthority> list = new ArrayList<>();
-        for (Permissions dto : permissionDtos) {
-            list.add(new SimpleGrantedAuthority(dto.getPermissionCode()));
+        for (String code : permList) {
+            list.add(new SimpleGrantedAuthority(code));
         }
         return list;
     }

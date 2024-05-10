@@ -1,5 +1,6 @@
 package com.elay.user.redis;
 
+import cn.hutool.json.JSONUtil;
 import com.elay.infra.constant.RedisConstants;
 import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -62,7 +63,7 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public void set(String key, Object value) {
-        redisTemplate.opsForValue().set(key, value, RedisConstants.REDIS_EXPIRE_TIME, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(key, JSONUtil.toJsonStr(value), RedisConstants.REDIS_EXPIRE_TIME, TimeUnit.SECONDS);
     }
 
     @Override

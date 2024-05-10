@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.elay.user.authority.entity.Users;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.elay.user.authority.request.auth.LoginReq;
+import com.elay.user.authority.request.auth.RegisterReq;
 import com.elay.user.authority.request.user.AdminUpdUserReq;
 import com.elay.user.security.bean.UserRolesPerms;
+
+import java.util.List;
 
 /**
  * <p>
@@ -26,5 +29,7 @@ public interface IUsersService extends IService<Users> {
 
     Users findByUsername(String username);
 
-    UserRolesPerms getUserPermsByUsername(String username);
+    List<String> getUserPermsByUsername(String username);
+
+    boolean register(RegisterReq params);
 }

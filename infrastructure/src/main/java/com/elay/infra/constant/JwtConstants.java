@@ -12,5 +12,8 @@ public class JwtConstants {
 
     public static final String JWT_SIGN_SECRET = "authority";
     public static final String JWT_HEADER = "Authorization";
+    //用户权限过期时间
+    public static final int JWT_EXPIRE_TIME = 24 * 60 * 60;
+
 
 }

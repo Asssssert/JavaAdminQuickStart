@@ -2,6 +2,7 @@ package com.elay.user.authority.controller.impl;
 
 import com.elay.infra.constant.JwtConstants;
 import com.elay.infra.constant.RedisConstants;
+import com.elay.user.authority.entity.Permissions;
 import com.elay.user.redis.RedisService;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
@@ -15,16 +16,28 @@ import com.elay.user.authority.response.user.LoginResp;
 import com.elay.user.authority.response.user.UserLoginResp;
 import com.elay.user.authority.service.impl.UsersService;
 import com.elay.user.emus.ResponseStatus;
+import com.elay.user.security.bean.IUserDetails;
+import com.elay.user.security.bean.UserRolesPerms;
 import com.elay.user.utils.JwtUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author LI
@@ -35,8 +48,10 @@ import java.io.IOException;
 public class AuthControllerImpl implements AuthController {
     @Resource
     private UsersService usersService;
-    @Autowired
+    @Resource
     private RedisService redisService;
+    @Resource
+    private AuthenticationManager authenticationManager;
 
     @Override
     public Result<LoginResp> login(@RequestBody @Valid LoginReq params) {
@@ -47,6 +62,8 @@ public class AuthControllerImpl implements AuthController {
             if (redisService.hasKey(RedisConstants.TOKEN_PREFIX + login.getUsername())) {
                 redisService.del(RedisConstants.TOKEN_PREFIX + login.getUsername());
                 redisService.del(RedisConstants.REFRESH_TOKEN_PREFIX + login.getUsername());
+//                redisService.del(RedisConstants.PERM_PREFIX + login.getUsername());
+//                redisService.del(RedisConstants.LOGIN_USER_PREFIX + login.getUsername());
             }
             String token = JwtUtils.generateAccessToken(login.getUsername());
             String refreshToken = JwtUtils.generateRefreshToken(login.getUsername());
@@ -55,7 +72,18 @@ public class AuthControllerImpl implements AuthController {
             LoginResp loginResp = new LoginResp(userLoginResp, token, refreshToken);
             //添加token到redis
             redisService.set(RedisConstants.TOKEN_PREFIX + login.getUsername(), token, JwtConstants.TOKEN_EXPIRE_TIME);
+            //添加刷新token到redis
             redisService.set(RedisConstants.REFRESH_TOKEN_PREFIX + login.getUsername(), refreshToken, JwtConstants.REF_TOKEN_EXPIRE_TIME);
+            //添加该用户拥有权限
+//            UserRolesPerms rolesPerms = usersService.getUserPermsByUsername(login.getUsername());
+//            List<SimpleGrantedAuthority> sga = rolesPerms.getPermissionsList().stream()
+//                    .map(permissions -> new SimpleGrantedAuthority(permissions.getPermissionCode()))
+//                    .collect(Collectors.toList());
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPasswodHash());
+            Authentication authentication = authenticationManager.authenticate(authenticationToken);
+            IUserDetails loginUser = (IUserDetails) authentication.getPrincipal();
+            redisService.set(RedisConstants.LOGIN_USER_PREFIX + login.getUsername(), loginUser, JwtConstants.JWT_EXPIRE_TIME);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
             return Result.ok(ResponseStatus.LOGIN_SUCCESS, loginResp);
         }
         return Result.err(ResponseStatus.LOGIN_FAIL, null);
@@ -88,4 +116,10 @@ public class AuthControllerImpl implements AuthController {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public Result test() {
+        return Result.ok(ResponseStatus.SUCCESS);
+    }
+
 }

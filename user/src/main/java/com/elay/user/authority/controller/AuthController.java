@@ -55,4 +55,7 @@ public interface AuthController {
     @GetMapping("/captcha")
     void captcha(HttpServletResponse response);
 
+    @GetMapping("/test")
+    Result test();
+
 }
