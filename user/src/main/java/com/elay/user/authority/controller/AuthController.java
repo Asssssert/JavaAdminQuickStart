@@ -35,7 +35,7 @@ public interface AuthController {
      *
      * @return
      */
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     Result logout();
 
     /**

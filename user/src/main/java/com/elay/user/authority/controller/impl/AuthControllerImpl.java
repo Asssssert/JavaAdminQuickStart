@@ -20,6 +20,8 @@ import com.elay.user.security.bean.IUserDetails;
 import com.elay.user.security.bean.UserRolesPerms;
 import com.elay.user.utils.JwtUtils;
 import jakarta.annotation.Resource;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +54,8 @@ public class AuthControllerImpl implements AuthController {
     private RedisService redisService;
     @Resource
     private AuthenticationManager authenticationManager;
+    @Resource
+    private HttpServletRequest hsr;
 
     @Override
     public Result<LoginResp> login(@RequestBody @Valid LoginReq params) {
@@ -93,6 +97,21 @@ public class AuthControllerImpl implements AuthController {
 
     @Override
     public Result<Void> logout() {
+        String token = hsr.getHeader("Authorization");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Users login = (Users) authentication.getPrincipal();
+        if(!redisService.hasKey(RedisConstants.TOKEN_PREFIX + login.getUsername())){
+            return Result.err(ResponseStatus.FORBIDDEN);
+        }
+        String redisToken = (String) redisService.get(RedisConstants.TOKEN_PREFIX + login.getUsername());
+        if (!token.equals(redisToken)) {
+            return Result.err(ResponseStatus.FORBIDDEN);
+        }
+        redisService.del(RedisConstants.TOKEN_PREFIX + login.getUsername());
+        redisService.del(RedisConstants.REFRESH_TOKEN_PREFIX + login.getUsername());
+        redisService.del(RedisConstants.PERM_PREFIX + login.getUsername());
+        redisService.del(RedisConstants.LOGIN_USER_PREFIX + login.getUsername());
+        SecurityContextHolder.clearContext();
         return Result.ok(ResponseStatus.LOGOUT_SUCCESS);
     }
 

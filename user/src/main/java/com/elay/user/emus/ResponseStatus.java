@@ -23,7 +23,7 @@ public enum ResponseStatus {
     UNSUPPORTED_MEDIA_TYPE(415, "不支持的媒体类型"),
     REQUEST_TIMEOUT(408, "请求超时"),
     CONFLICT(409, "冲突"),
-    FORBIDDEN(403, "禁止访问"),
+    FORBIDDEN(403, "认证失败"),
     NOT_ACCEPTABLE(406, "不可接受"),
     //参数校验失败
     PARAMETER_ERROR(400, "参数校验失败"),
