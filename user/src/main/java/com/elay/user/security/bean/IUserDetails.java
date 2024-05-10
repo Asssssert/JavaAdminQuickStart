@@ -23,8 +23,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+@JsonIgnoreProperties({"password","username","enabled","accountNonExpired", "accountNonLocked", "credentialsNonExpired", "authorities"})
+//@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class IUserDetails implements UserDetails, Serializable {
     private Users user;
     private List<String> permList;

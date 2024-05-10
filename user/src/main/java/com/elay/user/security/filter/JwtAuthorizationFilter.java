@@ -3,6 +3,8 @@ package com.elay.user.security.filter;
 import com.elay.infra.constant.JwtConstants;
 import com.elay.infra.constant.RedisConstants;
 import com.elay.user.authority.entity.Users;
+import com.elay.user.authority.response.Result;
+import com.elay.user.emus.ResponseStatus;
 import com.elay.user.redis.RedisService;
 import com.elay.user.security.bean.IUserDetails;
 import com.elay.user.utils.JwtUtils;
@@ -49,23 +51,30 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-//            IUserDetails userDetails = (IUserDetails) redisService.get(RedisConstants.LOGIN_USER_PREFIX + username);
-//            if (userDetails == null) {
-//                filterChain.doFilter(request, response);
-//                return;
-//            }
-            Users user = (Users) redisService.get(RedisConstants.LOGIN_USER_PREFIX + username);
-            if (user == null) {
+            IUserDetails userDetails = (IUserDetails) redisService.get(RedisConstants.LOGIN_USER_PREFIX + username);
+            if (userDetails == null) {
                 filterChain.doFilter(request, response);
                 return;
             }
-            List<String> permList = (List<String>) redisService.get(RedisConstants.PERM_PREFIX + username);
+            //如果redis中没有Token
+            if(!redisService.hasKey(RedisConstants.TOKEN_PREFIX + userDetails.getUsername())){
+                filterChain.doFilter(request, response);
+                return;
+            }
+            //如果redis不匹配
+            String redisToken = (String) redisService.get(RedisConstants.TOKEN_PREFIX + userDetails.getUsername());
+            if (!token.equals(redisToken)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+            List<SimpleGrantedAuthority> permList = (List<SimpleGrantedAuthority>) redisService.get(RedisConstants.PERM_PREFIX + username);
             if (permList == null) {
                 filterChain.doFilter(request, response);
                 return;
             }
-            List<SimpleGrantedAuthority> sgas = permList.stream().map(s -> new SimpleGrantedAuthority(s)).collect(Collectors.toList());
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, user.getPasswodHash(), sgas);
+//            List<SimpleGrantedAuthority> sgas = permList.stream().map(s -> new SimpleGrantedAuthority(s)).collect(Collectors.toList());
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), permList);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             filterChain.doFilter(request, response);
         } catch (Exception e) {

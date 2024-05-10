@@ -80,15 +80,12 @@ public class AuthControllerImpl implements AuthController {
             redisService.set(RedisConstants.REFRESH_TOKEN_PREFIX + login.getUsername(), refreshToken, JwtConstants.REF_TOKEN_EXPIRE_TIME);
             //添加该用户拥有权限
             List<String> permList = usersService.getUserPermsByUsername(login.getUsername());
-//            List<SimpleGrantedAuthority> sgas = permList.stream().map(s -> new SimpleGrantedAuthority(s)).collect(Collectors.toList());
-//            List<SimpleGrantedAuthority> sga = rolesPerms.getPermissionsList().stream()
-//                    .map(permissions -> new SimpleGrantedAuthority(permissions.getPermissionCode()))
-//                    .collect(Collectors.toList());
+            List<SimpleGrantedAuthority> sgas = permList.stream().map(s -> new SimpleGrantedAuthority(s)).collect(Collectors.toList());
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPasswodHash());
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
-//            IUserDetails loginUser = (IUserDetails) authentication.getPrincipal();
-            redisService.set(RedisConstants.LOGIN_USER_PREFIX + login.getUsername(), login, JwtConstants.JWT_EXPIRE_TIME);
-            redisService.set(RedisConstants.PERM_PREFIX + login.getUsername(), permList, JwtConstants.JWT_EXPIRE_TIME);
+            IUserDetails loginUser = (IUserDetails) authentication.getPrincipal();
+            redisService.set(RedisConstants.LOGIN_USER_PREFIX + login.getUsername(), loginUser, JwtConstants.JWT_EXPIRE_TIME);
+            redisService.set(RedisConstants.PERM_PREFIX + login.getUsername(), sgas, JwtConstants.JWT_EXPIRE_TIME);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             return Result.ok(ResponseStatus.LOGIN_SUCCESS, loginResp);
         }
@@ -97,21 +94,17 @@ public class AuthControllerImpl implements AuthController {
 
     @Override
     public Result<Void> logout() {
-        String token = hsr.getHeader("Authorization");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Users login = (Users) authentication.getPrincipal();
-        if(!redisService.hasKey(RedisConstants.TOKEN_PREFIX + login.getUsername())){
-            return Result.err(ResponseStatus.FORBIDDEN);
+        try {
+            IUserDetails userDetails = (IUserDetails) authentication.getPrincipal();
+            redisService.del(RedisConstants.TOKEN_PREFIX + userDetails.getUsername());
+            redisService.del(RedisConstants.REFRESH_TOKEN_PREFIX + userDetails.getUsername());
+            redisService.del(RedisConstants.PERM_PREFIX + userDetails.getUsername());
+            redisService.del(RedisConstants.LOGIN_USER_PREFIX + userDetails.getUsername());
+            SecurityContextHolder.clearContext();
+        }catch (Exception e){
+            return Result.err(ResponseStatus.LOGOUT_FAIL);
         }
-        String redisToken = (String) redisService.get(RedisConstants.TOKEN_PREFIX + login.getUsername());
-        if (!token.equals(redisToken)) {
-            return Result.err(ResponseStatus.FORBIDDEN);
-        }
-        redisService.del(RedisConstants.TOKEN_PREFIX + login.getUsername());
-        redisService.del(RedisConstants.REFRESH_TOKEN_PREFIX + login.getUsername());
-        redisService.del(RedisConstants.PERM_PREFIX + login.getUsername());
-        redisService.del(RedisConstants.LOGIN_USER_PREFIX + login.getUsername());
-        SecurityContextHolder.clearContext();
         return Result.ok(ResponseStatus.LOGOUT_SUCCESS);
     }
 
