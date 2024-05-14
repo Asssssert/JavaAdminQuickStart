@@ -4,6 +4,8 @@ import com.elay.user.authority.response.Result;
 import com.elay.user.authority.request.auth.LoginReq;
 import com.elay.user.authority.request.auth.RegisterReq;
 import com.elay.user.authority.response.user.LoginResp;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Validated
 @RequestMapping("/auth")
+@Tag(name = "认证接口")
 public interface AuthController {
 
     /**
@@ -27,31 +30,19 @@ public interface AuthController {
      * @param params
      * @return
      */
+    @Operation(summary = "登录")
     @PostMapping("/login")
     Result login(@RequestBody @Valid LoginReq params);
 
-    /**
-     * 退出
-     *
-     * @return
-     */
+    @Operation(summary = "退出")
     @GetMapping("/logout")
     Result logout();
 
-    /**
-     * 注册
-     *
-     * @param params
-     * @return
-     */
+    @Operation(summary = "注册")
     @PostMapping("/register")
     Result register(@RequestBody @Valid RegisterReq params);
 
-    /**
-     * 获取验证码
-     *
-     * @param response
-     */
+    @Operation(summary = "获取验证码")
     @GetMapping("/captcha")
     void captcha(HttpServletResponse response);
 

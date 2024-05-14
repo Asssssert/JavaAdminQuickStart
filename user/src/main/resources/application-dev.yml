@@ -45,3 +45,4 @@ management:
     web:
       exposure:
         include: '*'
+springdoc.swagger-ui.path: /doc/swagger-ui.html

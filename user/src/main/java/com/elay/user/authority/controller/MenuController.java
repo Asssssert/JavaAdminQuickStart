@@ -5,6 +5,7 @@ import com.elay.user.authority.response.Result;
 import com.elay.user.authority.entity.Menu;
 import com.elay.user.authority.request.menu.UpdMenuReq;
 import com.elay.user.authority.request.menu.AddMenuReq;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public interface MenuController {
 
     //基本角色接口
+    @Operation(summary = "添加菜单")
     @PostMapping("/add")
     Result<Void> add(@RequestBody @Valid AddMenuReq params);
 
