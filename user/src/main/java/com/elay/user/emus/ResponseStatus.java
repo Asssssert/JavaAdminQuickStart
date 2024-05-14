@@ -19,11 +19,12 @@ public enum ResponseStatus {
     CAPTCHA_ERROR(401, "验证码错误"),
     CAPTCHA_NULL(401, "验证码为空"),
     NOT_FOUND(404, "未找到"),
-    UNAUTHORIZED(401, "未授权"),
+    UNAUTHORIZED(401, "认证异常，请重新登录"),
     UNSUPPORTED_MEDIA_TYPE(415, "不支持的媒体类型"),
     REQUEST_TIMEOUT(408, "请求超时"),
     CONFLICT(409, "冲突"),
     FORBIDDEN(403, "认证失败"),
+    NOT_PERMISSION(403, "没有访问权限"),
     NOT_ACCEPTABLE(406, "不可接受"),
     //参数校验失败
     PARAMETER_ERROR(400, "参数校验失败"),

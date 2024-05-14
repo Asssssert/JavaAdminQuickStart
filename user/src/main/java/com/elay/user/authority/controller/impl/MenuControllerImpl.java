@@ -48,7 +48,7 @@ public class MenuControllerImpl implements MenuController {
 
     @Override
     public Result<Void> del(Integer menuId) {
-        if (menuService.removeById(menuId)) {
+        if (menuService.delById(menuId)) {
             return Result.ok(ResponseStatus.SUCCESS);
         }
         //删除角色菜单关联表

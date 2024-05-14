@@ -7,6 +7,7 @@ import com.elay.user.authority.mapper.RoleMenusMapper;
 import com.elay.user.authority.request.role.UpdRoleMenuReq;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,7 @@ public class RoleMenusService extends ServiceImpl<RoleMenusMapper, RoleMenus> im
         return baseMapper.selectList(wrapper);
     }
 
+    @Transactional
     @Override
     public boolean updMenu(UpdRoleMenuReq params) {
         //全量更新

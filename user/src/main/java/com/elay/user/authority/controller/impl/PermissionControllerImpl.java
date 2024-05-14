@@ -49,7 +49,7 @@ public class PermissionControllerImpl implements PermissionController {
 
     @Override
     public Result<Void> del(Integer permissionId) {
-        if (!permissionsService.removeById(permissionId)) {
+        if (!permissionsService.delById(permissionId)) {
             return Result.err(ResponseStatus.PERMISSION_NOT_EXIST_ERROR);
         }
         //删除角色权限管理表

@@ -8,6 +8,7 @@ import com.elay.user.security.handler.IAccessDeniedHandler;
 import com.elay.user.security.handler.IAuthenticationEntryPoint;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,6 +29,7 @@ import java.util.List;
 @EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfiguration {
     @Resource
     private JwtAuthorizationFilter jwtAuthorizationFilter;
@@ -47,8 +49,9 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         List<Permissions> permsList = permissionsService.getPermissionParentId(PermConstants.PERMISSION_TYPE);
         //动态添加权限
+        log.info("====开始加载动态权限====");
         for (Permissions permissions : permsList) {
-            System.out.println("地址:" + permissions.getPermissionApi() + "---权限:" + permissions.getPermissionCode());
+            log.info("接口地址：[{}]---权限CODE[{}]", permissions.getPermissionApi(),permissions.getPermissionCode());
             //anon的都通过
             if (permissions.getPermissionCode().equals("anon")) {
                 http.authorizeRequests().requestMatchers(permissions.getPermissionApi()).permitAll();
@@ -56,6 +59,8 @@ public class SecurityConfiguration {
                 http.authorizeRequests().requestMatchers(permissions.getPermissionApi()).hasAuthority(permissions.getPermissionCode());
             }
         }
+        log.info("====动态权限加载完毕====");
+
         http
                 .authorizeRequests()
                 .anyRequest()

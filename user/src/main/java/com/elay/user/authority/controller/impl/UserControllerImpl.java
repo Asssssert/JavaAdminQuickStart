@@ -13,6 +13,7 @@ import com.elay.user.authority.entity.Users;
 import com.elay.user.authority.request.user.AdminUpdUserReq;
 import com.elay.user.authority.request.user.UpdUserRoleReq;
 import jakarta.annotation.Resource;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,7 +43,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     public Result<Void> del(Integer userId) {
-        boolean b = usersService.removeById(userId);
+        boolean b = usersService.delById(userId);
         if (!b) {
             return Result.err(ResponseStatus.USER_NOT_FOUND, null);
         }

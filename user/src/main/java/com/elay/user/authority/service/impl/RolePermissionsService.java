@@ -7,6 +7,7 @@ import com.elay.user.authority.mapper.RolePermissionsMapper;
 import com.elay.user.authority.request.role.UpdRolePermissionReq;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,7 @@ public class RolePermissionsService extends ServiceImpl<RolePermissionsMapper, R
         baseMapper.delete(wrapper);
     }
 
+    @Transactional
     @Override
     public boolean updPermission(UpdRolePermissionReq params) {
         //先删除现有的权限

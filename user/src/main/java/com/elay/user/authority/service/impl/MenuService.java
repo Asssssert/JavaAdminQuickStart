@@ -10,6 +10,7 @@ import com.elay.user.authority.request.menu.AddMenuReq;
 import com.elay.user.authority.request.menu.UpdMenuReq;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class MenuService extends ServiceImpl<MenuMapper, Menu> implements IMenuService {
 
+    @Transactional
     @Override
     public boolean add(AddMenuReq params) {
         if(this.exitByNameAndPath(params.getMenuName(),params.getMenuPath())){
@@ -32,6 +34,7 @@ public class MenuService extends ServiceImpl<MenuMapper, Menu> implements IMenuS
         return this.save(menu);
     }
 
+    @Transactional
     @Override
     public boolean upd(UpdMenuReq params) {
         Menu menu = this.getById(params.getMenuId());
@@ -52,6 +55,12 @@ public class MenuService extends ServiceImpl<MenuMapper, Menu> implements IMenuS
         Page<Menu> menuPage = new Page<>(page, size);
         Page<Menu> selectPage = baseMapper.selectPage(menuPage, wrapper);
         return selectPage;
+    }
+
+    @Transactional
+    @Override
+    public boolean delById(Integer menuId) {
+        return removeById(menuId);
     }
 
 

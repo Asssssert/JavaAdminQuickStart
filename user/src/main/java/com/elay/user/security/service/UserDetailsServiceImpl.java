@@ -33,10 +33,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user.getState() != 0) {
             throw new RuntimeException(ResponseStatus.USER_STATE_FAIL.getMsg());
         }
-        //不添加权限到用户对象，网络耗时太久
         List<String> permList = usersService.getUserPermsByUsername(username);
 //        System.out.println(System.currentTimeMillis()-startTime);
         return new IUserDetails(user, permList);
-//        return new IUserDetails(user, null);
     }
 }

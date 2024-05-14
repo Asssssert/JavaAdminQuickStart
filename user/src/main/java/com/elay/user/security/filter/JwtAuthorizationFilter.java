@@ -1,5 +1,6 @@
 package com.elay.user.security.filter;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.elay.infra.constant.JwtConstants;
 import com.elay.infra.constant.RedisConstants;
 import com.elay.user.authority.entity.Users;
@@ -14,15 +15,18 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,22 +35,24 @@ import java.util.stream.Collectors;
  * @since 2024/5/9
  */
 @Component
+@Slf4j
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     @Resource
     private RedisService redisService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println(request.getRequestURI());
         try {
             //  从request中获取token
             String token = this.getTokenFromHttpServletRequest(request);
             //  直接放行,由系统Security判断是否具有访问权限
             if (StringUtil.isNullOrEmpty(token)) {
+                log.info("请求地址:[{}]-请求方法:[{}]", request.getRequestURI(), request.getMethod());
                 filterChain.doFilter(request, response);
                 return;
             }
             String username = JwtUtils.verifyTokenAndGetUsername(token);
+            log.info("请求地址:[{}]-请求方法:[{}]-用户名:[{}]", request.getRequestURI(), request.getMethod(), username);
             if (username == null) {
                 filterChain.doFilter(request, response);
                 return;
@@ -57,7 +63,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 return;
             }
             //如果redis中没有Token
-            if(!redisService.hasKey(RedisConstants.TOKEN_PREFIX + userDetails.getUsername())){
+            if (!redisService.hasKey(RedisConstants.TOKEN_PREFIX + userDetails.getUsername())) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -67,19 +73,22 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-            List<SimpleGrantedAuthority> permList = (List<SimpleGrantedAuthority>) redisService.get(RedisConstants.PERM_PREFIX + username);
-            if (permList == null) {
-                filterChain.doFilter(request, response);
-                return;
-            }
+            //权限列表
+            Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+//            List<SimpleGrantedAuthority> permList = (List<SimpleGrantedAuthority>) redisService.get(RedisConstants.PERM_PREFIX + username);
+//            if (permList == null) {
+//                filterChain.doFilter(request, response);
+//                return;
+//            }
 //            List<SimpleGrantedAuthority> sgas = permList.stream().map(s -> new SimpleGrantedAuthority(s)).collect(Collectors.toList());
             UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), permList);
+                    new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), authorities);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            log.error("ErrMsg:[{}]", e.getMessage());
+            filterChain.doFilter(request, response);
+//            throw new TokenExpiredException(e.getMessage());
         }
     }
 

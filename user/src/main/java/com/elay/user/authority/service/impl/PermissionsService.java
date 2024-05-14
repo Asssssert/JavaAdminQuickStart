@@ -10,6 +10,7 @@ import com.elay.user.authority.entity.Permissions;
 import com.elay.user.authority.mapper.PermissionsMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ import java.util.List;
 @Service
 public class PermissionsService extends ServiceImpl<PermissionsMapper, Permissions> implements IPermissionsService {
 
+    @Transactional
     @Override
     public boolean add(AddPermissionReq params) {
         if (exitByUsername(params.getPermissionName())) {
@@ -35,6 +37,7 @@ public class PermissionsService extends ServiceImpl<PermissionsMapper, Permissio
         return this.save(permissions);
     }
 
+    @Transactional
     @Override
     public boolean upd(UpdPermissionReq params) {
         Permissions byId = getById(params.getPermissionId());
@@ -73,5 +76,11 @@ public class PermissionsService extends ServiceImpl<PermissionsMapper, Permissio
         QueryWrapper<Permissions> wrapper = new QueryWrapper<>();
         wrapper.ne("permission_parent_id", permissionType);
         return baseMapper.selectList(wrapper);
+    }
+
+    @Transactional
+    @Override
+    public boolean delById(Integer permissionId) {
+        return removeById(permissionId);
     }
 }

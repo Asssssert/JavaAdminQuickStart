@@ -20,4 +20,5 @@ public interface IRolesService extends IService<Roles> {
 
     boolean upd(UpdRoleReq params);
 
+    boolean delById(Integer roleId);
 }

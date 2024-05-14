@@ -28,4 +28,6 @@ public interface IPermissionsService extends IService<Permissions> {
     List<Permissions> getPermissionByType(int permissionType);
 
     List<Permissions> getPermissionParentId(int permissionType);
+
+    boolean delById(Integer permissionId);
 }

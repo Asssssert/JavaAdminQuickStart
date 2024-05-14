@@ -32,4 +32,6 @@ public interface IUsersService extends IService<Users> {
     List<String> getUserPermsByUsername(String username);
 
     boolean register(RegisterReq params);
+
+    boolean delById(Integer userId);
 }

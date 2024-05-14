@@ -21,4 +21,6 @@ public interface IMenuService extends IService<Menu> {
     boolean upd(UpdMenuReq params);
 
     Page<Menu> pageByParentId(Integer parentId, Integer page, Integer size);
+
+    boolean delById(Integer menuId);
 }

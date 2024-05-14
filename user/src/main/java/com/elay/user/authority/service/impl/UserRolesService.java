@@ -7,6 +7,7 @@ import com.elay.user.authority.mapper.UserRolesMapper;
 import com.elay.user.authority.request.user.UpdUserRoleReq;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class UserRolesService extends ServiceImpl<UserRolesMapper, UserRoles> im
         wrapper.eq("user_id", userId);
         baseMapper.delete(wrapper);
     }
-
+    @Transactional
     @Override
     public boolean updRoleIds(UpdUserRoleReq params) {
         //全量更新

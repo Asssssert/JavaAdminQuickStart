@@ -9,6 +9,7 @@ import com.elay.user.authority.request.role.AddRoleReq;
 import com.elay.user.authority.request.role.UpdRoleReq;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RolesService extends ServiceImpl<RolesMapper, Roles> implements IRolesService {
 
+    @Transactional
     @Override
     public boolean add(AddRoleReq params) {
         //存在相同的身份
@@ -33,6 +35,7 @@ public class RolesService extends ServiceImpl<RolesMapper, Roles> implements IRo
         return this.save(roles);
     }
 
+    @Transactional
     @Override
     public boolean upd(UpdRoleReq params) {
         Roles roles = this.getById(params.getRoleId());
@@ -47,6 +50,11 @@ public class RolesService extends ServiceImpl<RolesMapper, Roles> implements IRo
         return false;
     }
 
+    @Transactional
+    @Override
+    public boolean delById(Integer roleId) {
+        return removeById(roleId);
+    }
 
 
     private boolean existByRoleName(String roleName) {

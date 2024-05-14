@@ -56,7 +56,7 @@ public class RoleControllerImpl implements RoleController {
 
     @Override
     public Result<Void> del(Integer roleId) {
-        if (!rolesService.removeById(roleId)) {
+        if (!rolesService.delById(roleId)) {
             return Result.err(ResponseStatus.ROLE_NOT_EXIST);
         }
         //删除关联关系
